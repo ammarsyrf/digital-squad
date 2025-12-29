@@ -97,6 +97,52 @@ class JobController extends Controller
         return redirect()->back()->with('success', 'Status lamaran berhasil diperbarui!');
     }
 
+    public function scheduleInterview(Request $request, Lamaran $lamaran)
+    {
+        $request->validate([
+            'tanggal' => 'required|date',
+            'jam' => 'required',
+            'lokasi' => 'required|string',
+            'deskripsi' => 'required|string',
+        ]);
+
+        // Update Application Status
+        $lamaran->update(['status' => 'Interview']);
+
+        // Get Data
+        $talentUser = $lamaran->talent->user;
+        $umkmName = Auth::user()->umkm->nama_umkm;
+
+        // Build Message
+        $messageBody = "Halo {$lamaran->talent->nama_lengkap},\n\n" .
+            "Selamat! Anda diundang untuk mengikuti wawancara di {$umkmName}.\n\n" .
+            "Detail Wawancara:\n" .
+            "Tanggal: {$request->tanggal}\n" .
+            "Jam: {$request->jam}\n" .
+            "Lokasi: {$request->lokasi}\n\n" .
+            "Catatan: {$request->deskripsi}\n\n" .
+            "Mohon kehadiran tepat waktu.";
+
+        // Send Message
+        \App\Models\Pesan::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $talentUser->id,
+            'pesan' => $messageBody,
+            'is_read' => false,
+        ]);
+
+        // Send Notification
+        \App\Models\Notifikasi::create([
+            'user_id' => $talentUser->id,
+            'judul' => "Undangan Wawancara: $umkmName",
+            'pesan' => "Anda telah diundang wawancara. Cek pesan masuk Anda untuk detail lengkap.",
+            'link' => route('talent.messages'),
+            'is_read' => false,
+        ]);
+
+        return redirect()->back()->with('success', 'Jadwal wawancara berhasil dikirim dan status pelamar diperbarui!');
+    }
+
     // Talent Methods
     public function talentIndex(Request $request)
     {
@@ -125,7 +171,7 @@ class JobController extends Controller
         return view('talent.jobs.show', compact('lowongan', 'hasApplied'));
     }
 
-    public function apply(Lowongan $lowongan)
+    public function apply(Request $request, Lowongan $lowongan)
     {
         $talent = Auth::user()->talent;
         if (!$talent) {
@@ -136,10 +182,22 @@ class JobController extends Controller
             return redirect()->back()->with('error', 'Anda sudah melamar pekerjaan ini.');
         }
 
+        $request->validate([
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:2048', // 2MB Max
+            'cover_letter' => 'required|string|min:20',
+        ]);
+
+        $cvPath = null;
+        if ($request->hasFile('cv')) {
+            $cvPath = $request->file('cv')->store('resumes', 'public');
+        }
+
         Lamaran::create([
             'talent_id' => $talent->id,
             'lowongan_id' => $lowongan->id,
             'status' => 'Pending',
+            'cv_path' => $cvPath,
+            'cover_letter' => $request->cover_letter,
         ]);
 
         return redirect()->back()->with('success', 'Lamaran Anda berhasil dikirim!');

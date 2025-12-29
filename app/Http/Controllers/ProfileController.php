@@ -84,6 +84,7 @@ class ProfileController extends Controller
             'email_instansi' => 'nullable|email',
             'website' => 'nullable|url',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'dokumen_verifikasi' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // Max 5MB
         ]);
 
         if ($request->hasFile('logo')) {
@@ -92,6 +93,20 @@ class ProfileController extends Controller
             }
             $path = $request->file('logo')->store('logos', 'public');
             $validated['logo'] = $path;
+        }
+
+        // Handle Document Upload
+        if ($request->hasFile('dokumen_verifikasi')) {
+            if ($umkm->dokumen_verifikasi) {
+                Storage::delete('public/' . $umkm->dokumen_verifikasi);
+            }
+            $path = $request->file('dokumen_verifikasi')->store('documents/umkm', 'public');
+            $validated['dokumen_verifikasi'] = $path;
+            
+            // Auto-request verification / reset status if not already verified
+            if ($umkm->status_verifikasi != 'verified') {
+                $validated['status_verifikasi'] = 'pending'; // Reset to pending for Admin review
+            }
         }
 
         $umkm->update($validated);

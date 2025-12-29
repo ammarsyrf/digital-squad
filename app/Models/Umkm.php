@@ -18,6 +18,7 @@ class Umkm extends Model
         'email_instansi',
         'website',
         'logo',
+        'dokumen_verifikasi',
         'status_verifikasi',
         'catatan_admin'
     ];

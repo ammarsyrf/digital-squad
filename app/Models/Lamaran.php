@@ -11,7 +11,9 @@ class Lamaran extends Model
     protected $fillable = [
         'talent_id',
         'lowongan_id',
-        'status'
+        'status',
+        'cv_path',
+        'cover_letter'
     ];
 
     public function talent()

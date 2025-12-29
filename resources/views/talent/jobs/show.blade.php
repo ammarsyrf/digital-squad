@@ -61,22 +61,144 @@
                             </a>
                         </div>
                     @else
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
-                                class="px-8 py-4 border-2 border-primary text-primary rounded-2xl font-black hover:bg-primary/5 transition-all flex items-center gap-2 active:scale-95">
-                                <span class="material-symbols-outlined">chat</span>
-                                Tanya Instansi
-                            </a>
-                            <form action="{{ route('talent.jobs.apply', $lowongan->id) }}" method="POST" x-data="{ applying: false }" @submit="applying = true">
-                                @csrf
-                                <button type="submit"
-                                    :disabled="applying"
-                                    class="px-10 py-4 bg-primary text-white rounded-2xl font-black hover:bg-blue-600 transition-all shadow-xl shadow-primary/30 flex items-center gap-2 active:scale-95 disabled:opacity-50">
-                                    <span class="material-symbols-outlined" x-show="!applying">send</span>
-                                    <span class="animate-spin material-symbols-outlined" x-show="applying">progress_activity</span>
-                                    <span x-text="applying ? 'Mengirim...' : 'Lamar Sekarang'"></span>
+                        <div x-data="{ showApplyModal: {{ $errors->any() ? 'true' : 'false' }}, fileName: null }">
+                            <div class="flex flex-col md:flex-row gap-3">
+                                <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
+                                    class="px-8 py-4 border-2 border-primary text-primary rounded-2xl font-black hover:bg-primary/5 transition-all flex items-center gap-2 active:scale-95">
+                                    <span class="material-symbols-outlined">chat</span>
+                                    Tanya Instansi
+                                </a>
+                                <button @click="showApplyModal = true"
+                                    class="px-10 py-4 bg-primary text-white rounded-2xl font-black hover:bg-blue-600 transition-all shadow-xl shadow-primary/30 flex items-center gap-2 active:scale-95">
+                                    <span class="material-symbols-outlined">send</span>
+                                    Lamar Sekarang
                                 </button>
-                            </form>
+                            </div>
+
+                            <!-- Apply Modal -->
+                            <div x-show="showApplyModal"
+                                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+                                x-transition:enter="transition ease-out duration-300"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-200"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0" x-cloak>
+                                
+                                <div @click.away="showApplyModal = false"
+                                    class="bg-white dark:bg-slate-900 rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col"
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                                    x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+                                    
+                                    <!-- Header -->
+                                    <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-10">
+                                        <div>
+                                            <h3 class="text-2xl font-black text-slate-900 dark:text-white">Lamar Pekerjaan</h3>
+                                            <p class="text-slate-500 text-sm">Posisi: <span class="text-primary font-bold">{{ $lowongan->judul }}</span></p>
+                                        </div>
+                                        <button @click="showApplyModal = false" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                                            <span class="material-symbols-outlined">close</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Form -->
+                                    <form action="{{ route('talent.jobs.apply', $lowongan->id) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+                                        @csrf
+                                        
+                                        <!-- Warning Alert -->
+                                        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-amber-600 dark:text-amber-400 mt-0.5">warning</span>
+                                            <div class="text-sm text-amber-800 dark:text-amber-300">
+                                                <p class="font-bold mb-1">Pastikan data diri Anda sudah benar!</p>
+                                                <p>Jika terdapat kesalahan data, mohon perbarui terlebih dahulu di <a href="{{ route('talent.profile') }}" class="underline font-bold hover:text-amber-900 dark:hover:text-amber-200">halaman profil saya</a> sebelum mengirim lamaran.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Personal Info (Readonly) -->
+                                        <!-- Personal Info (Readonly) -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div class="space-y-2">
+                                                <label class="text-xs font-bold uppercase text-slate-500">Nama Lengkap</label>
+                                                <input type="text" value="{{ Auth::user()->name }}" readonly
+                                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl font-bold text-slate-700 dark:text-slate-300 cursor-not-allowed focus:ring-0">
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-xs font-bold uppercase text-slate-500">Email</label>
+                                                <input type="email" value="{{ Auth::user()->email }}" readonly
+                                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl font-bold text-slate-700 dark:text-slate-300 cursor-not-allowed focus:ring-0">
+                                            </div>
+                                            <div class="space-y-2 md:col-span-2">
+                                                <label class="text-xs font-bold uppercase text-slate-500">Nomor Telepon</label>
+                                                <input type="text" value="{{ optional(Auth::user()->talent)->telepon ?? '-' }}" readonly
+                                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl font-bold text-slate-700 dark:text-slate-300 cursor-not-allowed focus:ring-0">
+                                            </div>
+                                        </div>
+
+                                        <!-- CV Upload -->
+                                        <div class="space-y-2">
+                                            <label class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-primary">upload_file</span>
+                                                Unggah CV / Resume
+                                                <span class="text-red-500">*</span>
+                                            </label>
+                                            <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 hover:border-primary/50 hover:bg-primary/5 transition-all text-center group cursor-pointer"
+                                                :class="{'border-primary bg-primary/5': fileName, 'border-red-500 bg-red-50': {{ $errors->has('cv') ? 'true' : 'false' }} }">
+                                                <input type="file" name="cv" accept=".pdf,.doc,.docx" required
+                                                    @change="fileName = $event.target.files[0] ? $event.target.files[0].name : null"
+                                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                                <div class="space-y-2 pointer-events-none">
+                                                    <span class="material-symbols-outlined text-4xl text-slate-400 group-hover:text-primary transition-colors"
+                                                        :class="{'text-primary': fileName, 'text-red-500': {{ $errors->has('cv') ? 'true' : 'false' }} }">
+                                                        cloud_upload
+                                                    </span>
+                                                    <div>
+                                                        <p class="text-sm font-bold text-slate-600 dark:text-slate-400 truncate px-4" x-text="fileName ? fileName : 'Klik untuk upload atau drag & drop'"></p>
+                                                        <p class="text-xs text-primary font-bold mt-1" x-show="fileName">File terpilih - Klik untuk ganti</p>
+                                                        <p class="text-xs text-slate-400" x-show="!fileName">PDF, DOC, DOCX (Maks. 2MB)</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @error('cv')
+                                                <p class="text-red-500 text-xs font-bold mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <!-- Cover Letter -->
+                                        <div class="space-y-2">
+                                            <label class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-primary">description</span>
+                                                Deskripsi Perkenalan / Cover Letter
+                                                <span class="text-red-500">*</span>
+                                            </label>
+                                            <textarea name="cover_letter" rows="5" required minlength="20"
+                                                placeholder="Perkenalkan diri Anda dan jelaskan mengapa Anda cocok untuk posisi ini..."
+                                                class="w-full rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950 focus:ring-primary focus:border-primary @error('cover_letter') border-red-500 focus:border-red-500 @enderror">{{ old('cover_letter') }}</textarea>
+                                            <div class="flex justify-between">
+                                                @error('cover_letter')
+                                                    <p class="text-red-500 text-xs font-bold">{{ $message }}</p>
+                                                @else
+                                                    <span></span>
+                                                @enderror
+                                                <p class="text-xs text-slate-400 text-right">Min. 20 karakter</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Actions -->
+                                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+                                            <button type="button" @click="showApplyModal = false"
+                                                class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 transition-colors">
+                                                Batal
+                                            </button>
+                                            <button type="submit"
+                                                class="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-primary/30 flex items-center gap-2">
+                                                <span class="material-symbols-outlined">send</span>
+                                                Kirim Lamaran
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>

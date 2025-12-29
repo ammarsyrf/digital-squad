@@ -36,40 +36,124 @@
         </div>
 
         <!-- Verification Banner -->
-        <div
-            class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row">
-            <div class="p-8 flex-1 flex flex-col justify-center gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
-                        <span class="material-symbols-outlined text-sm font-bold">check</span>
-                    </span>
-                    <span
-                        class="text-emerald-700 dark:text-emerald-400 font-black text-[10px] bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800 uppercase tracking-widest">TERVERIFIKASI</span>
-                    <span class="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></span>
-                    <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-bold">
-                        <span class="material-symbols-outlined text-[16px]">location_on</span>
-                        {{ $umkm->alamat ?? 'Indonesia' }}
+        <!-- Verification Banner -->
+        @if(optional($umkm)->status_verifikasi == 'verified')
+            <div
+                class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-8 flex-1 flex flex-col justify-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+                            <span class="material-symbols-outlined text-sm font-bold">check</span>
+                        </span>
+                        <span
+                            class="text-emerald-700 dark:text-emerald-400 font-black text-[10px] bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800 uppercase tracking-widest">TERVERIFIKASI</span>
+                        <span class="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></span>
+                        <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-bold">
+                            <span class="material-symbols-outlined text-[16px]">location_on</span>
+                            {{ $umkm->alamat ?? 'Indonesia' }}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Akun Instansi Anda Aktif</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
+                            Akses penuh diberikan. Anda dapat mengelola lowongan pekerjaan tanpa batas dan menjangkau ribuan talenta digital berbakat di platform kami.
+                        </p>
                     </div>
                 </div>
-                <div>
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Akun Instansi Anda Aktif</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
-                        Akses penuh diberikan. Anda dapat mengelola lowongan pekerjaan tanpa batas dan menjangkau ribuan talenta digital berbakat di platform kami.
-                    </p>
-                </div>
-            </div>
-            <div class="h-40 md:h-auto md:w-1/3 bg-slate-50 dark:bg-slate-800/50 relative overflow-hidden group">
-                <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
-                    style="background-image: radial-gradient(#137fec 1px, transparent 1px); background-size: 20px 20px;">
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div
-                        class="h-20 w-20 bg-white dark:bg-slate-900 rounded-full shadow-2xl flex items-center justify-center text-primary z-10 transform group-hover:scale-110 transition-transform duration-500">
-                        <span class="material-symbols-outlined text-4xl fill">verified_user</span>
+                <div class="h-40 md:h-auto md:w-1/3 bg-slate-50 dark:bg-slate-800/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
+                        style="background-image: radial-gradient(#10b981 1px, transparent 1px); background-size: 20px 20px;">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="h-20 w-20 bg-white dark:bg-slate-900 rounded-full shadow-2xl flex items-center justify-center text-emerald-500 z-10 transform group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-4xl fill">verified_user</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @elseif(optional($umkm)->status_verifikasi == 'rejected')
+            <div
+                class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-8 flex-1 flex flex-col justify-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+                            <span class="material-symbols-outlined text-sm font-bold">close</span>
+                        </span>
+                        <span
+                            class="text-red-700 dark:text-red-400 font-black text-[10px] bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded border border-red-200 dark:border-red-800 uppercase tracking-widest">VERIFIKASI DITOLAK</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Mohon Perbaiki Data Anda</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl mb-3">
+                            Maaf, pengajuan verifikasi instansi Anda ditolak. Silakan perbarui dokumen atau data sesuai catatan di bawah ini.
+                        </p>
+                        @if($umkm->catatan_admin)
+                            <div class="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700 flex items-start gap-3">
+                                <span class="material-symbols-outlined mt-0.5">info</span>
+                                <div>
+                                    <span class="font-bold block text-xs uppercase tracking-wider mb-1 opacity-75">Alasan Penolakan</span>
+                                    <p>{{ $umkm->catatan_admin }}</p>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="mt-4">
+                             <a href="{{ route('umkm.profile') }}" class="text-primary font-bold text-sm hover:underline">Perbarui Profil & Dokumen &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-40 md:h-auto md:w-1/3 bg-slate-50 dark:bg-slate-800/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
+                        style="background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 20px 20px;">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="h-20 w-20 bg-white dark:bg-slate-900 rounded-full shadow-2xl flex items-center justify-center text-red-500 z-10 transform group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-4xl fill">gpp_bad</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div
+                class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row">
+                <div class="p-8 flex-1 flex flex-col justify-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+                            <span class="material-symbols-outlined text-sm font-bold">hourglass_empty</span>
+                        </span>
+                        <span
+                            class="text-amber-700 dark:text-amber-400 font-black text-[10px] bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded border border-amber-200 dark:border-amber-800 uppercase tracking-widest">MENUNGGU VERIFIKASI</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Akun Dalam Peninjauan</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
+                            Terima kasih telah melengkapi data. Tim admin kami sedang memverifikasi dokumen legalitas instansi Anda. Notifikasi akan dikirim setelah proses selesai.
+                        </p>
+                        @if(!$umkm->dokumen_verifikasi)
+                             <div class="mt-4">
+                                <p class="text-xs text-red-500 font-bold mb-2 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">warning</span>
+                                    Anda belum mengunggah dokumen verifikasi!
+                                </p>
+                                <a href="{{ route('umkm.profile') }}" class="text-primary font-bold text-sm hover:underline">Unggah Dokumen Sekarang &rarr;</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="h-40 md:h-auto md:w-1/3 bg-slate-50 dark:bg-slate-800/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
+                        style="background-image: radial-gradient(#f59e0b 1px, transparent 1px); background-size: 20px 20px;">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div
+                            class="h-20 w-20 bg-white dark:bg-slate-900 rounded-full shadow-2xl flex items-center justify-center text-amber-500 z-10 transform group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-4xl fill">shield</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

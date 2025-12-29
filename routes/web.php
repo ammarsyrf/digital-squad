@@ -98,8 +98,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/jobs/{lowongan}', [JobController::class, 'update'])->name('jobs.update');
         Route::delete('/jobs/{lowongan}', [JobController::class, 'destroy'])->name('jobs.destroy');
         Route::get('/applicants', [JobController::class, 'applicants'])->name('applicants');
-        Route::post('/applicants/{lamaran}/status', [JobController::class, 'updateApplicantStatus'])->name('applicants.status');
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
+        Route::post('/applicants/{lamaran}/status', [JobController::class, 'updateApplicantStatus'])->name('applicants.status');
+        Route::post('/applicants/{lamaran}/schedule', [JobController::class, 'scheduleInterview'])->name('applicants.schedule');
         Route::get('/profile', [ProfileController::class, 'umkm'])->name('profile');
         Route::post('/profile', [ProfileController::class, 'updateUmkm'])->name('profile.update');
         Route::get('/settings', [ProfileController::class, 'settings'])->name('settings');

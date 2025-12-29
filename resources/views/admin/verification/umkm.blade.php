@@ -16,7 +16,11 @@
         </div>
 
         @if(session('success'))
-            <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-center gap-3">
+            <div x-data="{ show: true }" 
+                 x-init="setTimeout(() => show = false, 3000)" 
+                 x-show="show" 
+                 x-transition.duration.500ms
+                 class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-center gap-3">
                 <span class="material-symbols-outlined">check_circle</span>
                 <p class="font-medium">{{ session('success') }}</p>
             </div>
@@ -97,8 +101,14 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 text-right" x-data="{ showDetailModal: false }">
                                 <div class="flex justify-end gap-2">
+                                    <button @click="showDetailModal = true"
+                                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                        title="Lihat Detail & Dokumen">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+
                                     <a href="{{ route('messages.show', $umkm->user_id) }}"
                                         class="p-2 text-primary hover:bg-blue-50 rounded-lg transition-colors"
                                         title="Chat Pemilik">
@@ -121,6 +131,131 @@
                                         </button>
                                     @endif
                                 </div>
+
+                                <!-- Detail Modal -->
+                                <template x-teleport="body">
+                                    <div x-show="showDetailModal"
+                                        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm text-left"
+                                        x-transition:enter="transition ease-out duration-300"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        x-transition:leave="transition ease-in duration-200"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        style="display: none;" x-cloak>
+                                        
+                                        <div @click.away="showDetailModal = false"
+                                            class="bg-white dark:bg-slate-900 rounded-[32px] w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
+                                            x-transition:enter="transition ease-out duration-300"
+                                            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                                            x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+                                            
+                                            <!-- Header -->
+                                            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-10">
+                                                <div>
+                                                    <h3 class="text-xl font-black text-slate-900 dark:text-white">Detail UMKM</h3>
+                                                    <p class="text-slate-500 text-sm">Informasi lengkap dan dokumen verifikasi.</p>
+                                                </div>
+                                                <button @click="showDetailModal = false" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                                                    <span class="material-symbols-outlined">close</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+                                                <!-- Profile Info -->
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                    <!-- Basic Info -->
+                                                    <div class="md:col-span-1 space-y-6">
+                                                        <div class="text-center md:text-left">
+                                                            <div class="size-24 rounded-2xl bg-slate-100 dark:bg-slate-800 mx-auto md:mx-0 flex items-center justify-center mb-4 overflow-hidden border border-slate-200 dark:border-slate-700">
+                                                                @if($umkm->logo)
+                                                                    <img src="{{ asset('storage/' . $umkm->logo) }}" alt="Logo" class="w-full h-full object-cover">
+                                                                @else
+                                                                    <span class="material-symbols-outlined text-4xl text-slate-400">business</span>
+                                                                @endif
+                                                            </div>
+                                                            <h4 class="text-xl font-bold text-slate-900 dark:text-white">{{ $umkm->nama_umkm }}</h4>
+                                                            <p class="text-slate-500 text-sm">{{ $umkm->user->email }}</p>
+                                                        </div>
+
+                                                        <div class="space-y-4 divide-y divide-slate-100 dark:divide-slate-800">
+                                                            <div class="pt-4 first:pt-0">
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Pemilik</p>
+                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->user->name ?? '-' }}</p>
+                                                            </div>
+                                                            <div class="pt-4">
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Telepon</p>
+                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->telepon ?? '-' }}</p>
+                                                            </div>
+                                                            <div class="pt-4">
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Website</p>
+                                                                <a href="{{ $umkm->website }}" target="_blank" class="font-medium text-blue-600 hover:underline truncate block">{{ $umkm->website ?? '-' }}</a>
+                                                            </div>
+                                                            <div class="pt-4">
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Alamat</p>
+                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->alamat ?? '-' }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Description & Document -->
+                                                    <div class="md:col-span-2 space-y-8">
+                                                        <div>
+                                                            <h5 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                                                                <span class="material-symbols-outlined text-primary">notes</span>
+                                                                Tentang Instansi
+                                                            </h5>
+                                                            <div class="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line text-sm border border-slate-100 dark:border-slate-800/50">
+                                                                {{ $umkm->deskripsi ?? 'Tidak ada deskripsi.' }}
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="flex items-center justify-between mb-3">
+                                                                <h5 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                                    <span class="material-symbols-outlined text-primary">verified</span>
+                                                                    Dokumen Verifikasi
+                                                                </h5>
+                                                                @if($umkm->dokumen_verifikasi)
+                                                                    <a href="{{ asset('storage/' . $umkm->dokumen_verifikasi) }}" target="_blank" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                                                                        Buka di Tab Baru <span class="material-symbols-outlined text-sm">open_in_new</span>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                            
+                                                            @if($umkm->dokumen_verifikasi)
+                                                                <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden h-[500px] border border-slate-200 dark:border-slate-700 relative group">
+                                                                    @php
+                                                                        $extension = pathinfo($umkm->dokumen_verifikasi, PATHINFO_EXTENSION);
+                                                                    @endphp
+                                                                    
+                                                                    @if(in_array(strtolower($extension), ['pdf']))
+                                                                        <iframe src="{{ asset('storage/' . $umkm->dokumen_verifikasi) }}" class="w-full h-full" frameborder="0"></iframe>
+                                                                    @elseif(in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp']))
+                                                                         <div class="w-full h-full flex items-center justify-center bg-black/5">
+                                                                            <img src="{{ asset('storage/' . $umkm->dokumen_verifikasi) }}" class="max-w-full max-h-full object-contain">
+                                                                         </div>
+                                                                    @else
+                                                                        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                                                                            <span class="material-symbols-outlined text-5xl mb-2">description</span>
+                                                                            <p class="font-bold">Format file tidak didukung untuk pratinjau.</p>
+                                                                            <a href="{{ asset('storage/' . $umkm->dokumen_verifikasi) }}" class="mt-4 px-4 py-2 bg-primary text-white rounded-xl font-bold text-sm">Download File</a>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            @else
+                                                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl h-32 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-700">
+                                                                    <span class="material-symbols-outlined text-3xl mb-1">folder_off</span>
+                                                                    <p class="text-sm font-bold">UMKM beum mengunggah dokumen verifikasi</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
                             </td>
                         </tr>
                     @empty

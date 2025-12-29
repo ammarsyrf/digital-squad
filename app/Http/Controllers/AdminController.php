@@ -21,7 +21,7 @@ class AdminController extends Controller
         $umkm = Umkm::findOrFail($id);
         $umkm->update(['status_verifikasi' => 'verified']);
 
-        return redirect()->back()->with('success', "Akun UMKM {$umkm->nama_umkm} berhasil diverifikasi.");
+        return redirect()->back()->with('success', "Akun {$umkm->nama_umkm} berhasil diverifikasi.");
     }
 
     public function rejectUmkm(Request $request, $id)
@@ -32,7 +32,7 @@ class AdminController extends Controller
             'catatan_admin' => $request->catatan
         ]);
 
-        return redirect()->back()->with('success', "Akun UMKM {$umkm->nama_umkm} telah ditolak.");
+        return redirect()->back()->with('success', "Akun {$umkm->nama_umkm} telah ditolak.");
     }
 
     public function certificateVerification()
