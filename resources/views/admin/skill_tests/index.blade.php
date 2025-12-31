@@ -72,7 +72,7 @@
         </div>
 
         @if(session('success'))
-            <div class="p-4 rounded-lg bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800" role="alert">
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition.duration.500ms class="p-4 rounded-lg bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800" role="alert">
                 <span class="font-medium">Sukses!</span> {{ session('success') }}
             </div>
         @endif
