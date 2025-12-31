@@ -84,13 +84,13 @@ class DashboardController extends Controller
             })->count(),
             'total_review' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
                 $q->where('umkm_id', $umkm->id);
-            })->where('status', 'review')->count(),
+            })->where('status', 'Pending')->count(),
             'total_wawancara' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
                 $q->where('umkm_id', $umkm->id);
-            })->where('status', 'wawancara')->count(),
+            })->where('status', 'Interview')->count(),
             'total_diterima' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
                 $q->where('umkm_id', $umkm->id);
-            })->where('status', 'diterima')->count(),
+            })->where('status', 'Diterima')->count(),
         ];
 
         $recent_lowongan = Lowongan::withCount('lamaran')

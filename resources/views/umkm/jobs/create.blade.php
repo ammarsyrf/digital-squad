@@ -29,9 +29,10 @@
                             class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary">
                             <option value="Full-time">Full-time</option>
                             <option value="Part-time">Part-time</option>
+                            <option value="Daily Worker/Harian">Daily Worker/Harian</option>
                             <option value="Kontrak">Kontrak</option>
                             <option value="Freelance">Freelance</option>
-                            <option value="Internship">Internship</option>
+                            <option value="Internship">Magang/Internship</option>
                         </select>
                     </div>
                     <div class="space-y-2">
@@ -41,10 +42,29 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Sistem Kerja</label>
+                        <select name="sistem_kerja" required
+                            class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary">
+                            <option value="WFO">WFO (Work From Office)</option>
+                            <option value="Remote">Remote (Kerja Jarak Jauh)</option>
+                            <option value="Hybrid">Hybrid (Campuran)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Rentang Gaji</label>
+                        <input type="text" name="gaji" placeholder="Contoh: Rp 2.000.000 - Rp 3.000.000"
+                            class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary">
+                        <p class="text-[10px] text-slate-400">Transparansi gaji meningkatkan minat pelamar hingga 40%.</p>
+                    </div>
+                </div>
+
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Estimasi Gaji (Opsional)</label>
-                    <input type="text" name="gaji" placeholder="Contoh: 5jt - 8jt"
-                        class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Fasilitas & Benefit</label>
+                    <textarea name="fasilitas" rows="3"
+                        placeholder="Contoh: Makan siang gratis, Mess/Tempat tinggal, Bonus target, THR..."
+                        class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary"></textarea>
                 </div>
 
                 <div class="space-y-2">

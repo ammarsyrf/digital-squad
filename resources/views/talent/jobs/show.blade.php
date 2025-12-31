@@ -217,6 +217,20 @@
                             {{ $lowongan->deskripsi }}
                         </div>
                     </div>
+
+                    @if($lowongan->fasilitas)
+                    <div class="pt-10 border-t border-slate-100 dark:border-slate-700">
+                        <h3 class="text-2xl font-black mb-6 flex items-center gap-3">
+                            <span class="size-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-xl">redeem</span>
+                            </span>
+                            Fasilitas & Benefit
+                        </h3>
+                        <div class="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line text-lg">
+                            {{ $lowongan->fasilitas }}
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Glassmorphism Ringkasan Card -->
@@ -232,6 +246,16 @@
                                 <div class="min-w-0">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Lokasi</p>
                                     <p class="text-base font-black text-slate-900 dark:text-white truncate">{{ $lowongan->lokasi }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 group">
+                                <div
+                                    class="size-12 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-primary">work_history</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Sistem Kerja</p>
+                                    <p class="text-base font-black text-slate-900 dark:text-white truncate">{{ $lowongan->sistem_kerja ?? 'WFO' }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 group">

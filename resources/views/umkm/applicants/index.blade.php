@@ -178,24 +178,165 @@
                                         <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
                                             <!-- Profile Summary -->
                                             <div class="flex gap-6 items-start">
-                                                <div class="size-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                                                    <span class="material-symbols-outlined text-4xl text-slate-400">person</span>
+                                                <div class="size-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
+                                                    @if($app->talent->foto)
+                                                        <img src="{{ asset('storage/' . $app->talent->foto) }}" alt="{{ $app->talent->nama_lengkap }}" class="w-full h-full object-cover">
+                                                    @else
+                                                        <span class="material-symbols-outlined text-4xl text-slate-400">person</span>
+                                                    @endif
                                                 </div>
-                                                <div class="space-y-1">
+                                                <div class="space-y-1 flex-1">
                                                     <h4 class="text-2xl font-black text-slate-900 dark:text-white">{{ $app->talent->nama_lengkap }}</h4>
-                                                    <p class="text-slate-500 dark:text-slate-400">{{ $app->talent->pekerjaan_saat_ini ?? 'Tidak ada judul' }}</p>
-                                                    <div class="flex flex-wrap gap-4 mt-2 text-sm text-slate-600 dark:text-slate-400">
-                                                        <div class="flex items-center gap-1.5">
+                                                    <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $app->talent->pekerjaan_saat_ini ?? 'Belum ada posisi' }}</p>
+                                                    
+                                                    <div class="flex flex-wrap gap-4 mt-3 text-sm text-slate-600 dark:text-slate-400">
+                                                        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
                                                             <span class="material-symbols-outlined text-lg text-primary">email</span>
                                                             {{ $app->talent->user->email }}
                                                         </div>
-                                                        <div class="flex items-center gap-1.5">
+                                                        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
                                                             <span class="material-symbols-outlined text-lg text-primary">call</span>
                                                             {{ $app->talent->telepon ?? '-' }}
                                                         </div>
+                                                        @if($app->talent->umur)
+                                                        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
+                                                            <span class="material-symbols-outlined text-lg text-primary">cake</span>
+                                                            {{ $app->talent->umur }} Tahun
+                                                        </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- Personal Details Grid -->
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                    <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Jenis Kelamin</p>
+                                                    <p class="font-bold text-slate-700 dark:text-slate-200">{{ $app->talent->jenis_kelamin ?? '-' }}</p>
+                                                </div>
+                                                <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                    <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Status Pernikahan</p>
+                                                    <p class="font-bold text-slate-700 dark:text-slate-200">{{ $app->talent->status_pernikahan ?? '-' }}</p>
+                                                </div>
+                                                <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                    <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Lokasi</p>
+                                                    <p class="font-bold text-slate-700 dark:text-slate-200">{{ Str::limit($app->talent->alamat, 30) ?? '-' }}</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- About & Skills -->
+                                            <div class="space-y-6">
+                                                @if($app->talent->deskripsi)
+                                                <div>
+                                                    <h5 class="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-primary text-lg">info</span>
+                                                        Tentang Saya
+                                                    </h5>
+                                                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{{ $app->talent->deskripsi }}</p>
+                                                </div>
+                                                @endif
+
+                                                @if($app->talent->skill)
+                                                <div>
+                                                    <h5 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-primary text-lg">stars</span>
+                                                        Keahlian / Skills
+                                                    </h5>
+                                                    <div class="flex flex-wrap gap-2">
+                                                        @foreach(explode(';', $app->talent->skill) as $skill)
+                                                            @if(trim($skill))
+                                                                <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold border border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800">
+                                                                    {{ trim($skill) }}
+                                                                </span>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+                                            <!-- Education & Experience -->
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                <!-- Experience -->
+                                                <div>
+                                                    <h5 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-primary text-lg">work_history</span>
+                                                        Pengalaman Kerja
+                                                    </h5>
+                                                    <div class="space-y-4">
+                                                        @if($app->talent->pengalaman_kerja)
+                                                            @foreach(explode(';', $app->talent->pengalaman_kerja) as $exp)
+                                                                @if(trim($exp))
+                                                                    <div class="flex gap-3">
+                                                                        <div class="mt-1 size-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
+                                                                            <span class="material-symbols-outlined text-lg">business_center</span>
+                                                                        </div>
+                                                                        <div class="text-sm">
+                                                                            <p class="text-slate-700 dark:text-slate-200 font-medium leading-relaxed">{{ trim($exp) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <p class="text-sm text-slate-400 italic">Belum ada data pengalaman.</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <!-- Education -->
+                                                <div>
+                                                    <h5 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-primary text-lg">school</span>
+                                                        Pendidikan
+                                                    </h5>
+                                                    <div class="space-y-4">
+                                                        @if($app->talent->pendidikan_terakhir)
+                                                            @foreach(explode(';', $app->talent->pendidikan_terakhir) as $edu)
+                                                                @if(trim($edu))
+                                                                    <div class="flex gap-3">
+                                                                        <div class="mt-1 size-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                                                                            <span class="material-symbols-outlined text-lg">school</span>
+                                                                        </div>
+                                                                        <div class="text-sm">
+                                                                            <p class="text-slate-700 dark:text-slate-200 font-medium leading-relaxed">{{ trim($edu) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <p class="text-sm text-slate-400 italic">Belum ada data pendidikan.</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Socials -->
+                                            @if($app->talent->linkedin || $app->talent->portfolio || $app->talent->hobi)
+                                            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex flex-wrap gap-6 text-sm">
+                                                @if($app->talent->linkedin)
+                                                    <a href="{{ $app->talent->linkedin }}" target="_blank" class="flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-medium">
+                                                        <span class="material-symbols-outlined">link</span>
+                                                        LinkedIn Profile
+                                                    </a>
+                                                @endif
+                                                @if($app->talent->portfolio)
+                                                    <a href="{{ $app->talent->portfolio }}" target="_blank" class="flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-medium">
+                                                        <span class="material-symbols-outlined">captive_portal</span>
+                                                        Portfolio Link
+                                                    </a>
+                                                @endif
+                                                @if($app->talent->hobi)
+                                                    <div class="flex items-center gap-2 text-slate-600">
+                                                        <span class="material-symbols-outlined">interests</span>
+                                                        <span class="font-medium">Hobi:</span> {{ $app->talent->hobi }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            @endif
+                                            
+                                            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
                                             <!-- Cover Letter -->
                                             <div>

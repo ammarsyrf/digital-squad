@@ -69,10 +69,82 @@
                         {{ $umkm->deskripsi ?? 'Instansi ini belum menambahkan deskripsi.' }}
                     </div>
                 </div>
+
+                <!-- Gallery Section -->
+                @if($umkm->galeri && count(json_decode($umkm->galeri)) > 0)
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">photo_library</span>
+                        Galeri & Suasana Kerja
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        @foreach(json_decode($umkm->galeri) as $img)
+                            <div class="aspect-square rounded-xl overflow-hidden group shadow-sm cursor-pointer">
+                                <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
 
             <!-- Sidebar Info (Glassmorphism inspired) -->
             <div class="space-y-6">
+                
+                <!-- Business Details -->
+                <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 dark:border-slate-700 pb-4">Info Bisnis</h4>
+                    <div class="space-y-4">
+                         <div class="flex justify-between items-center text-sm">
+                             <span class="text-slate-500">Kategori</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ $umkm->kategori ?? '-' }}</span>
+                         </div>
+                         <div class="flex justify-between items-center text-sm">
+                             <span class="text-slate-500">Skala</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ $umkm->skala_usaha ?? '-' }}</span>
+                         </div>
+                         <div class="flex justify-between items-center text-sm">
+                             <span class="text-slate-500">Tahun Berdiri</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ $umkm->tahun_berdiri ?? '-' }}</span>
+                         </div>
+                         <div class="flex justify-between items-center text-sm">
+                             <span class="text-slate-500">Karyawan</span>
+                             <span class="font-bold text-slate-900 dark:text-white">{{ $umkm->jumlah_karyawan ?? '-' }} Orang</span>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                 @if($umkm->instagram || $umkm->tiktok || $umkm->whatsapp)
+                <div class="grid grid-cols-3 gap-3">
+                    @if($umkm->instagram)
+                        <a href="{{ $umkm->instagram }}" target="_blank"
+                            class="py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center hover:border-pink-500 hover:text-pink-500 transition-all shadow-sm group">
+                            <i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i>
+                             <!-- Fallback Icon if FA not loaded -->
+                             <span class="sr-only">Instagram</span>
+                             <span class="material-symbols-outlined text-pink-500" style="font-family: 'Material Symbols Outlined';">photo_camera</span>
+                        </a>
+                    @endif
+                    @if($umkm->tiktok)
+                        <a href="{{ $umkm->tiktok }}" target="_blank"
+                            class="py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all shadow-sm group">
+                            <i class="fa-brands fa-tiktok text-xl group-hover:scale-110 transition-transform"></i>
+                            <span class="sr-only">TikTok</span>
+                             <span class="material-symbols-outlined" style="font-family: 'Material Symbols Outlined';">music_note</span>
+                        </a>
+                    @endif
+                    @if($umkm->whatsapp)
+                        <a href="{{ $umkm->whatsapp }}" target="_blank"
+                            class="py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center hover:border-emerald-500 hover:text-emerald-500 transition-all shadow-sm group">
+                            <i class="fa-brands fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i>
+                            <span class="sr-only">WhatsApp</span>
+                             <span class="material-symbols-outlined text-emerald-500" style="font-family: 'Material Symbols Outlined';">chat</span>
+                        </a>
+                    @endif
+                </div>
+                @endif
+
                 <div
                     class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
                     <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 text-center">Informasi

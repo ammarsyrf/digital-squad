@@ -201,7 +201,7 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-emerald-100 text-xs font-black uppercase tracking-widest">Wawancara</p>
+                    <p class="text-emerald-100 text-xs font-black uppercase tracking-widest">Interview</p>
                     <h3 class="text-4xl font-black mt-1">{{ $stats['total_wawancara'] }}</h3>
                 </div>
             </div>
@@ -276,7 +276,7 @@
                         $pipeline = [
                             ['label' => 'Total Pelamar', 'val' => $stats['total_pelamar'], 'color' => 'bg-primary'],
                             ['label' => 'Menunggu Review', 'val' => $stats['total_review'], 'color' => 'bg-orange-400'],
-                            ['label' => 'Wawancara', 'val' => $stats['total_wawancara'], 'color' => 'bg-indigo-500'],
+                            ['label' => 'Interview', 'val' => $stats['total_wawancara'], 'color' => 'bg-indigo-500'],
                             ['label' => 'Diterima', 'val' => $stats['total_diterima'], 'color' => 'bg-emerald-500'],
                         ];
                     @endphp

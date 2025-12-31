@@ -39,6 +39,9 @@ class JobController extends Controller
             'tipe_pekerjaan' => 'required|string',
             'lokasi' => 'required|string',
             'gaji' => 'nullable|string',
+            // New Fields
+            'sistem_kerja' => 'required|string',
+            'fasilitas' => 'nullable|string',
         ]);
 
         $validated['umkm_id'] = Auth::user()->umkm->id;
@@ -63,6 +66,9 @@ class JobController extends Controller
             'lokasi' => 'required|string',
             'gaji' => 'nullable|string',
             'status' => 'required|string',
+            // New Fields
+            'sistem_kerja' => 'required|string',
+            'fasilitas' => 'nullable|string',
         ]);
 
         $lowongan->update($validated);

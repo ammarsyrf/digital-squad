@@ -15,7 +15,9 @@ class Lowongan extends Model
         'tipe_pekerjaan',
         'lokasi',
         'gaji',
-        'status'
+        'status',
+        'sistem_kerja',
+        'fasilitas'
     ];
 
     public function umkm()

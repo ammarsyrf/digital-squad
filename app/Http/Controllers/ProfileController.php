@@ -27,15 +27,19 @@ class ProfileController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'tanggal_lahir' => 'nullable|date',
+            'umur' => 'nullable|integer',
             'jenis_kelamin' => 'nullable|string',
             'status_pernikahan' => 'nullable|string',
             'alamat' => 'nullable|string',
             'telepon' => 'nullable|string',
             'hobi' => 'nullable|string',
             'pekerjaan_saat_ini' => 'nullable|string',
-            'pengalaman_kerja' => 'nullable|string',
-            'pendidikan_terakhir' => 'nullable|string',
-            'skill' => 'nullable|string',
+            'pengalaman_kerja' => 'nullable|array',
+            'pengalaman_kerja.*' => 'string|max:1000',
+            'pendidikan_terakhir' => 'nullable|array', // Allow array
+            'pendidikan_terakhir.*' => 'string|max:255', // Validate items
+            'skill' => 'nullable|array',
+            'skill.*' => 'string|max:100',
             'linkedin' => 'nullable|string',
             'portfolio' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -47,6 +51,21 @@ class ProfileController extends Controller
             }
             $path = $request->file('foto')->store('profiles', 'public');
             $validated['foto'] = $path;
+        }
+
+        // Handle multiple education entries
+        if (isset($validated['pendidikan_terakhir']) && is_array($validated['pendidikan_terakhir'])) {
+            $validated['pendidikan_terakhir'] = implode('; ', array_filter($validated['pendidikan_terakhir']));
+        }
+
+        // Handle multiple work experience entries
+        if (isset($validated['pengalaman_kerja']) && is_array($validated['pengalaman_kerja'])) {
+            $validated['pengalaman_kerja'] = implode('; ', array_filter($validated['pengalaman_kerja']));
+        }
+
+        // Handle multiple skills
+        if (isset($validated['skill']) && is_array($validated['skill'])) {
+            $validated['skill'] = implode('; ', array_filter($validated['skill']));
         }
 
         $talent->update($validated);
@@ -83,8 +102,24 @@ class ProfileController extends Controller
             'telepon' => 'nullable|string',
             'email_instansi' => 'nullable|email',
             'website' => 'nullable|url',
+            // Business Info
+            'kategori' => 'nullable|string',
+            'skala_usaha' => 'nullable|string',
+            'tahun_berdiri' => 'nullable|integer',
+            'jumlah_karyawan' => 'nullable|string',
+            // Branding
+            'instagram' => 'nullable|string',
+            'tiktok' => 'nullable|string',
+            'whatsapp' => 'nullable|string',
+            'galeri' => 'nullable|array',
+            'galeri.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            // Legal
+            'npwp' => 'nullable|string',
+            'nama_penanggung_jawab' => 'nullable|string',
+            'jabatan_penanggung_jawab' => 'nullable|string',
+            
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'dokumen_verifikasi' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // Max 5MB
+            'dokumen_verifikasi' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -93,6 +128,39 @@ class ProfileController extends Controller
             }
             $path = $request->file('logo')->store('logos', 'public');
             $validated['logo'] = $path;
+        }
+
+        // Handle Gallery Upload (Append to existing)
+        if ($request->hasFile('galeri')) {
+            $currentGallery = json_decode($umkm->galeri ?? '[]', true);
+            if (!is_array($currentGallery)) $currentGallery = [];
+
+            foreach ($request->file('galeri') as $image) {
+                $currentGallery[] = $image->store('umkm_gallery', 'public');
+            }
+            $validated['galeri'] = json_encode($currentGallery);
+        } else {
+            // Keep existing gallery if no new files uploaded (and not explicitly clearing)
+            // But strict update might overwrite with null if not handled? 
+            // validate returns only validated fields. if 'galeri' is not in request, it won't be in $validated.
+            // If it IS in request but null? 
+            // We should be careful. Laravel's validate returns provided fields. 
+            // If input file is empty, it might not send 'galeri'.
+            // However, to be safe, we unset it from validated if it's not a file upload to avoid overwriting with null/empty if that happens.
+            unset($validated['galeri']);
+            if ($request->hasFile('galeri')) { // Re-check to be sure logic flow is correct
+                 // Already handled above
+            }
+        }
+        
+        // Re-assign logic for clarify:
+        if ($request->hasFile('galeri')) {
+             $currentGallery = json_decode($umkm->galeri ?? '[]', true);
+             if (!is_array($currentGallery)) $currentGallery = [];
+             foreach ($request->file('galeri') as $image) {
+                 $currentGallery[] = $image->store('umkm_gallery', 'public');
+             }
+             $validated['galeri'] = json_encode($currentGallery);
         }
 
         // Handle Document Upload
