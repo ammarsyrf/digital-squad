@@ -110,7 +110,12 @@ class DashboardController extends Controller
 
     public function takeTest(KategoriSkill $category)
     {
-        $questions = $category->soal()->whereIn('status', ['active', 'Aktif'])->inRandomOrder()->take(20)->get();
+        $questions = $category->soal()
+            ->whereIn('status', ['active', 'Aktif'])
+            ->where('tipe_soal', 'pilihan_ganda')
+            ->inRandomOrder()
+            ->take(20)
+            ->get();
         if ($questions->isEmpty()) {
             return redirect()->back()->with('error', 'Belum ada soal tersedia untuk kategori ini atau status soal belum aktif.');
         }

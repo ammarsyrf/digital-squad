@@ -102,6 +102,7 @@
                             </th>
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Pertanyaan</th>
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Kategori</th>
+                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tipe</th>
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Status</th>
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 text-right">Aksi</th>
                         </tr>
@@ -117,6 +118,9 @@
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
                                     {{ $test->kategori->nama_kategori }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                                    {{ ucwords(str_replace('_', ' ', $test->tipe_soal)) }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
                                     @if($test->status == 'aktif')

@@ -28,12 +28,19 @@
 
         <div x-data="{ 
                         showRejectModal: false, 
+                        showApproveModal: false,
                         rejectAction: '', 
+                        approveAction: '',
                         umkmName: '',
                         openReject(id, name) {
                             this.umkmName = name;
                             this.rejectAction = `{{ url('/admin/verification/umkm') }}/${id}/reject`;
                             this.showRejectModal = true;
+                        },
+                        openApprove(id, name) {
+                            this.umkmName = name;
+                            this.approveAction = `{{ url('/admin/verification/umkm') }}/${id}/approve`;
+                            this.showApproveModal = true;
                         }
                     }"
             class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -116,15 +123,11 @@
                                     </a>
 
                                     @if($umkm->status_verifikasi != 'Terverifikasi')
-                                        <form action="{{ route('admin.verification.umkm.approve', $umkm->id) }}" method="POST"
-                                            onsubmit="return confirm('Setujui verifikasi ini?')">
-                                            @csrf
-                                            <button type="submit"
-                                                class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                                                title="Setujui">
-                                                <span class="material-symbols-outlined">check_circle</span>
-                                            </button>
-                                        </form>
+                                        <button @click="openApprove('{{ $umkm->id }}', '{{ addslashes($umkm->nama_umkm) }}')"
+                                            class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                                            title="Setujui">
+                                            <span class="material-symbols-outlined">check_circle</span>
+                                        </button>
                                         <button @click="openReject('{{ $umkm->id }}', '{{ addslashes($umkm->nama_umkm) }}')"
                                             class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Tolak">
                                             <span class="material-symbols-outlined">cancel</span>
@@ -180,20 +183,74 @@
 
                                                         <div class="space-y-4 divide-y divide-slate-100 dark:divide-slate-800">
                                                             <div class="pt-4 first:pt-0">
-                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Pemilik</p>
-                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->user->name ?? '-' }}</p>
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Info Bisnis</p>
+                                                                <div class="space-y-2">
+                                                                     <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Pemilik</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->user->name ?? '-' }}</span>
+                                                                    </div>
+                                                                     <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Kategori</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->kategori ?? '-' }}</span>
+                                                                    </div>
+                                                                    <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Skala</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->skala_usaha ?? '-' }}</span>
+                                                                    </div>
+                                                                    <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Berdiri</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->tahun_berdiri ?? '-' }}</span>
+                                                                    </div>
+                                                                    <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Karyawan</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->jumlah_karyawan ?? '-' }}</span>
+                                                                    </div>
+                                                                    <div class="flex justify-between text-sm">
+                                                                        <span class="text-slate-500">Legalitas (NPWP)</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->npwp ?? '-' }}</span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+
                                                             <div class="pt-4">
-                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Telepon</p>
-                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->telepon ?? '-' }}</p>
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Penanggung Jawab</p>
+                                                                @if($umkm->nama_penanggung_jawab)
+                                                                    <p class="font-medium text-slate-900 dark:text-white text-sm">{{ $umkm->nama_penanggung_jawab }}</p>
+                                                                    <p class="text-xs text-slate-500">{{ $umkm->jabatan_penanggung_jawab ?? 'Jabatan tidak info' }}</p>
+                                                                @else
+                                                                    <p class="text-sm italic text-slate-500">Data tidak tersedia</p>
+                                                                @endif
                                                             </div>
+
                                                             <div class="pt-4">
-                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Website</p>
-                                                                <a href="{{ $umkm->website }}" target="_blank" class="font-medium text-blue-600 hover:underline truncate block">{{ $umkm->website ?? '-' }}</a>
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Kontak & Media Sosial</p>
+                                                                <div class="space-y-2 mt-2">
+                                                                     @if($umkm->website)
+                                                                        <a href="{{ $umkm->website }}" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 hover:underline">
+                                                                            <span class="material-symbols-outlined text-[16px]">public</span> Website
+                                                                        </a>
+                                                                    @endif
+                                                                    @if($umkm->email_instansi)
+                                                                         <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                                                            <span class="material-symbols-outlined text-[16px]">mail</span> {{ $umkm->email_instansi }}
+                                                                        </div>
+                                                                    @endif
+                                                                    @if($umkm->instagram)
+                                                                        <a href="{{ $umkm->instagram }}" target="_blank" class="flex items-center gap-2 text-sm text-pink-600 hover:underline">
+                                                                             <span class="material-symbols-outlined text-[16px]">photo_camera</span> Instagram
+                                                                        </a>
+                                                                    @endif
+                                                                    @if($umkm->tiktok)
+                                                                        <a href="{{ $umkm->tiktok }}" target="_blank" class="flex items-center gap-2 text-sm text-slate-900 dark:text-white hover:underline">
+                                                                             <span class="material-symbols-outlined text-[16px]">music_note</span> TikTok
+                                                                        </a>
+                                                                    @endif
+                                                                </div>
                                                             </div>
-                                                            <div class="pt-4">
-                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Alamat</p>
-                                                                <p class="font-medium text-slate-700 dark:text-slate-300">{{ $umkm->alamat ?? '-' }}</p>
+                                                            
+                                                             <div class="pt-4">
+                                                                <p class="text-xs font-bold uppercase text-slate-400 mb-1">Alamat Kantor</p>
+                                                                <p class="font-medium text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{{ $umkm->alamat ?? '-' }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -209,6 +266,23 @@
                                                                 {{ $umkm->deskripsi ?? 'Tidak ada deskripsi.' }}
                                                             </div>
                                                         </div>
+
+                                                        <!-- Gallery Preview -->
+                                                        @if($umkm->galeri && count(json_decode($umkm->galeri)) > 0)
+                                                        <div>
+                                                            <h5 class="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                                                                <span class="material-symbols-outlined text-primary">photo_library</span>
+                                                                Galeri Foto
+                                                            </h5>
+                                                            <div class="grid grid-cols-4 gap-2">
+                                                                @foreach(json_decode($umkm->galeri) as $img)
+                                                                    <a href="{{ asset('storage/' . $img) }}" target="_blank" class="aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:opacity-80 transition-opacity">
+                                                                        <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                                                                    </a>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        @endif
 
                                                         <div>
                                                             <div class="flex items-center justify-between mb-3">
@@ -306,6 +380,47 @@
                             <button type="submit"
                                 class="px-6 py-2.5 bg-red-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-red-500/30 hover:bg-red-700 transition-colors">Tolak
                                 Sekarang</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Alpine-powered Approve Modal -->
+            <div x-show="showApproveModal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" x-cloak
+                x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+
+                <div @click.away="showApproveModal = false"
+                    class="bg-white dark:bg-slate-900 rounded-2xl p-8 max-w-md w-full shadow-2xl transform transition-all"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100">
+
+                    <div class="flex items-center gap-3 mb-4 text-emerald-600">
+                        <span class="material-symbols-outlined text-3xl">verified</span>
+                        <h3 class="text-xl font-bold">Setujui Verifikasi</h3>
+                    </div>
+
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                        Apakah Anda yakin ingin menyetujui verifikasi untuk instansi <span class="font-bold text-slate-900 dark:text-white"
+                            x-text="umkmName"></span>?
+                        <br><br>
+                        <span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg border border-emerald-100 block">
+                            <span class="font-bold">Info:</span> Pesan notifikasi otomatis akan dikirim ke pengguna.
+                        </span>
+                    </p>
+
+                    <form :action="approveAction" method="POST">
+                        @csrf
+                        <div class="flex justify-end gap-3">
+                            <button type="button" @click="showApproveModal = false"
+                                class="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Batal</button>
+                            <button type="submit"
+                                class="px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/30 hover:bg-emerald-700 transition-colors">
+                                Ya, Setujui
+                            </button>
                         </div>
                     </form>
                 </div>

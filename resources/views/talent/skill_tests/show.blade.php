@@ -32,12 +32,15 @@
                                     <label
                                         class="relative flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 group">
                                         <input type="radio" name="answers[{{ $q->id }}]" value="{{ strtoupper($opt) }}"
-                                            class="opacity-0 absolute" required>
+                                            class="peer opacity-0 absolute inset-0 w-full h-full z-10 cursor-pointer" required>
                                         <div
-                                            class="size-5 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary mr-3 flex items-center justify-center transition-all">
+                                            class="size-5 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary mr-3 flex items-center justify-center transition-all relative z-0">
                                             <div class="size-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
                                         </div>
-                                        <span class="text-slate-700 dark:text-slate-300 font-medium">{{ $q->$field }}</span>
+                                        <div class="flex gap-2 relative z-0">
+                                            <span class="font-bold text-slate-900 dark:text-white">{{ strtoupper($opt) }}.</span>
+                                            <span class="text-slate-700 dark:text-slate-300 font-medium">{{ $q->$field }}</span>
+                                        </div>
                                     </label>
                                 @endforeach
                             </div>

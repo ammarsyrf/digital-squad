@@ -10,12 +10,14 @@ class SoalSkill extends Model
 
     protected $fillable = [
         'kategori_id',
+        'tipe_soal',
         'pertanyaan',
         'opsi_a',
         'opsi_b',
         'opsi_c',
         'opsi_d',
         'jawaban_benar',
+        'kunci_jawaban_essay',
         'kesulitan',
         'status'
     ];

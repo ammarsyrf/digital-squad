@@ -7,6 +7,7 @@ use App\Models\Umkm;
 use App\Models\Sertifikat;
 use App\Models\User;
 use App\Models\SoalSkill;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -20,6 +21,23 @@ class AdminController extends Controller
     {
         $umkm = Umkm::findOrFail($id);
         $umkm->update(['status_verifikasi' => 'verified']);
+
+        // Kirim Notifikasi ke UMKM
+        \App\Models\Notifikasi::create([
+            'user_id' => $umkm->user_id,
+            'judul' => 'Akun Instansi Terverifikasi',
+            'pesan' => "Selamat! Akun instansi {$umkm->nama_umkm} Anda telah berhasil diverifikasi.",
+            'link' => route('umkm.profile'),
+            'is_read' => false
+        ]);
+
+        // Kirim Pesan Chat Langsung ke UMKM
+        \App\Models\Pesan::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $umkm->user_id,
+            'pesan' => "Selamat! Akun instansi {$umkm->nama_umkm} Anda telah berhasil diverifikasi.",
+            'is_read' => false
+        ]);
 
         return redirect()->back()->with('success', "Akun {$umkm->nama_umkm} berhasil diverifikasi.");
     }
@@ -213,11 +231,13 @@ class AdminController extends Controller
         $validated = $request->validate([
             'pertanyaan' => 'required|string',
             'kategori_id' => 'required|exists:kategori_skill,id',
-            'opsi_a' => 'required|string',
-            'opsi_b' => 'required|string',
-            'opsi_c' => 'required|string',
-            'opsi_d' => 'required|string',
-            'jawaban_benar' => 'required|in:A,B,C,D',
+            'tipe_soal' => 'required|in:pilihan_ganda,essay',
+            'opsi_a' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_b' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_c' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_d' => 'required_if:tipe_soal,pilihan_ganda',
+            'jawaban_benar' => 'required_if:tipe_soal,pilihan_ganda',
+            'kunci_jawaban_essay' => 'required_if:tipe_soal,essay',
             'kesulitan' => 'required|in:mudah,sedang,sulit',
             'status' => 'required|in:aktif,nonaktif',
         ]);
@@ -239,16 +259,29 @@ class AdminController extends Controller
         $validated = $request->validate([
             'pertanyaan' => 'required|string',
             'kategori_id' => 'required|exists:kategori_skill,id',
-            'opsi_a' => 'required|string',
-            'opsi_b' => 'required|string',
-            'opsi_c' => 'required|string',
-            'opsi_d' => 'required|string',
-            'jawaban_benar' => 'required|in:A,B,C,D',
+            'tipe_soal' => 'required|in:pilihan_ganda,essay',
+            'opsi_a' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_b' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_c' => 'required_if:tipe_soal,pilihan_ganda',
+            'opsi_d' => 'required_if:tipe_soal,pilihan_ganda',
+            'jawaban_benar' => 'required_if:tipe_soal,pilihan_ganda',
+            'kunci_jawaban_essay' => 'required_if:tipe_soal,essay',
             'kesulitan' => 'required|in:mudah,sedang,sulit',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
         $soal = SoalSkill::findOrFail($id);
+
+        if ($request->tipe_soal === 'essay') {
+            $validated['opsi_a'] = null;
+            $validated['opsi_b'] = null;
+            $validated['opsi_c'] = null;
+            $validated['opsi_d'] = null;
+            $validated['jawaban_benar'] = null;
+        } else {
+            $validated['kunci_jawaban_essay'] = null;
+        }
+
         $soal->update($validated);
 
         return redirect()->route('admin.skill-tests')->with('success', 'Soal berhasil diperbarui.');
