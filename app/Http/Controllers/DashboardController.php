@@ -148,7 +148,32 @@ class DashboardController extends Controller
             }
         }
 
-        // 2. Data for Yearly (Current Year)
+        // 2. Data for Last Month
+        $startLastMonth = $endDate->copy()->subMonth()->startOfMonth();
+        $endLastMonth = $endDate->copy()->subMonth()->endOfMonth();
+        $periodLastMonth = \Carbon\CarbonPeriod::create($startLastMonth, $endLastMonth);
+
+        $sertifikatLastMonth = Sertifikat::whereBetween('created_at', [$startLastMonth, $endLastMonth])->get()->groupBy(function($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+        $umkmLastMonth = Umkm::whereBetween('created_at', [$startLastMonth, $endLastMonth])->get()->groupBy(function($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+
+        $dataLastMonth = [];
+        $labelsLastMonth = [];
+
+        foreach ($periodLastMonth as $date) {
+            $dateString = $date->format('Y-m-d');
+            $count = ($sertifikatLastMonth->has($dateString) ? $sertifikatLastMonth[$dateString]->count() : 0) + 
+                     ($umkmLastMonth->has($dateString) ? $umkmLastMonth[$dateString]->count() : 0);
+            
+            $dataLastMonth[] = $count;
+            $labelsLastMonth[] = $date->format('d M');
+        }
+
+
+        // 3. Data for Yearly (Current Year)
         $startYear = $endDate->copy()->startOfYear();
         $months = [];
         $dataYear = [];
@@ -173,6 +198,7 @@ class DashboardController extends Controller
         $chartData = [
             'seven_days' => ['labels' => $labels7Days, 'data' => $data7Days],
             'thirty_days' => ['labels' => $labels30Days, 'data' => $data30Days],
+            'last_month' => ['labels' => $labelsLastMonth, 'data' => $dataLastMonth],
             'year' => ['labels' => $months, 'data' => $dataYear],
         ];
 

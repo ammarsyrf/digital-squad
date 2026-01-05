@@ -139,7 +139,8 @@
                             class="text-sm bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-600 dark:text-slate-300 focus:ring-0 cursor-pointer">
                             <option value="seven_days">7 Hari Terakhir</option>
                             <option value="thirty_days">30 Hari Terakhir</option>
-                            <option value="year">Tahun Ini</option>
+                            <option value="last_month">Harian (Bulan Lalu)</option>
+                            <option value="year">Per Bulan (Jan - Des)</option>
                         </select>
                     </div>
                     <div id="verificationChart" class="w-full min-h-[300px]"></div>
