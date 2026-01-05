@@ -70,8 +70,7 @@
                                         <span class="material-symbols-outlined">edit</span>
                                     </a>
                                     <form action="{{ route('admin.skill-categories.delete', $category->id) }}" method="POST"
-                                        onsubmit="return confirm('Hapus kategori ini? Kategori yang memiliki soal mungkin akan menyebabkan error tampilan jika tidak ditangani.');"
-                                        class="inline">
+                                        class="inline delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-slate-400 hover:text-red-600 transition-colors"
@@ -96,4 +95,35 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteForms = document.querySelectorAll('.delete-form');
+                deleteForms.forEach(form => {
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        
+                        Swal.fire({
+                            title: 'Hapus kategori ini?',
+                            text: "Kategori yang memiliki soal mungkin akan menyebabkan error tampilan jika tidak ditangani.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#ef4444', // Red-500
+                            cancelButtonColor: '#64748b', // Slate-500
+                            confirmButtonText: 'Ya, Hapus!',
+                            cancelButtonText: 'Batal',
+                            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+    @endpush
 @endsection

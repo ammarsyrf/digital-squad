@@ -228,23 +228,60 @@ class AdminController extends Controller
 
     public function storeSkillTest(Request $request)
     {
-        $validated = $request->validate([
-            'pertanyaan' => 'required|string',
+        $rules = [
             'kategori_id' => 'required|exists:kategori_skill,id',
-            'tipe_soal' => 'required|in:pilihan_ganda,essay',
-            'opsi_a' => 'required_if:tipe_soal,pilihan_ganda',
-            'opsi_b' => 'required_if:tipe_soal,pilihan_ganda',
-            'opsi_c' => 'required_if:tipe_soal,pilihan_ganda',
-            'opsi_d' => 'required_if:tipe_soal,pilihan_ganda',
-            'jawaban_benar' => 'required_if:tipe_soal,pilihan_ganda',
-            'kunci_jawaban_essay' => 'required_if:tipe_soal,essay',
             'kesulitan' => 'required|in:mudah,sedang,sulit',
             'status' => 'required|in:aktif,nonaktif',
-        ]);
+            'questions' => 'required|array|min:1',
+            'questions.*.pertanyaan' => 'required|string',
+            'questions.*.tipe_soal' => 'required|in:pilihan_ganda,essay',
+        ];
 
-        SoalSkill::create($validated);
+        // Dynamic rules for each question
+        if ($request->has('questions') && is_array($request->questions)) {
+            foreach ($request->questions as $index => $q) {
+                $rules["questions.$index.opsi_a"] = 'required_if:questions.'.$index.'.tipe_soal,pilihan_ganda';
+                $rules["questions.$index.opsi_b"] = 'required_if:questions.'.$index.'.tipe_soal,pilihan_ganda';
+                $rules["questions.$index.opsi_c"] = 'required_if:questions.'.$index.'.tipe_soal,pilihan_ganda';
+                $rules["questions.$index.opsi_d"] = 'required_if:questions.'.$index.'.tipe_soal,pilihan_ganda';
+                $rules["questions.$index.jawaban_benar"] = 'required_if:questions.'.$index.'.tipe_soal,pilihan_ganda';
+                $rules["questions.$index.kunci_jawaban_essay"] = 'required_if:questions.'.$index.'.tipe_soal,essay';
+            }
+        }
 
-        return redirect()->route('admin.skill-tests')->with('success', 'Soal berhasil ditambahkan.');
+        $messages = [
+            'required_if' => 'Bidang ini wajib diisi untuk tipe soal terpilih.',
+        ];
+        
+        $validated = $request->validate($rules, $messages);
+
+        $commonData = [
+            'kategori_id' => $request->kategori_id,
+            'kesulitan' => $request->kesulitan,
+            'status' => $request->status,
+        ];
+
+        $count = 0;
+
+        foreach ($request->questions as $q) {
+            $data = array_merge($commonData, $q);
+            
+            // Clean up data based on type
+            if ($data['tipe_soal'] === 'essay') {
+                $data['opsi_a'] = null;
+                $data['opsi_b'] = null;
+                $data['opsi_c'] = null;
+                $data['opsi_d'] = null;
+                $data['jawaban_benar'] = null;
+            } else {
+                $data['kunci_jawaban_essay'] = null;
+            }
+
+            SoalSkill::create($data);
+            $count++;
+        }
+
+        return redirect()->route('admin.skill-tests')->with('success', $count . ' Soal berhasil ditambahkan.');
     }
 
     public function editSkillTest($id)
