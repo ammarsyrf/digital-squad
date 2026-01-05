@@ -312,6 +312,48 @@
                                                 </div>
                                             </div>
 
+                                            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+                                            <!-- Certificates -->
+                                            @if($app->talent->user->sertifikats->count() > 0)
+                                            <div>
+                                                <h5 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-primary text-lg">workspace_premium</span>
+                                                    Sertifikat & Lisensi
+                                                </h5>
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                    @foreach($app->talent->user->sertifikats as $sertifikat)
+                                                        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-md transition-shadow group">
+                                                            <div class="flex items-start justify-between mb-2">
+                                                                <div class="size-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                                                    <span class="material-symbols-outlined">verified</span>
+                                                                </div>
+                                                                <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full tracking-wider
+                                                                    @if(strtolower($sertifikat->status) == 'verified' || strtolower($sertifikat->status) == 'valid') bg-emerald-100 text-emerald-700 
+                                                                    @elseif(strtolower($sertifikat->status) == 'pending') bg-amber-100 text-amber-700 
+                                                                    @else bg-rose-100 text-rose-700 @endif">
+                                                                    {{ $sertifikat->status }}
+                                                                </span>
+                                                            </div>
+                                                            <h6 class="font-bold text-slate-900 dark:text-white line-clamp-2 text-sm mb-1" title="{{ $sertifikat->nama_sertifikat }}">
+                                                                {{ $sertifikat->nama_sertifikat }}
+                                                            </h6>
+                                                            <p class="text-xs text-slate-500 line-clamp-1 mb-3">{{ $sertifikat->penerbit }}</p>
+                                                            
+                                                            <div class="flex items-center justify-between mt-auto pt-3 border-t border-slate-100 dark:border-slate-700">
+                                                                <span class="text-[10px] text-slate-400 font-medium">{{ \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('M Y') }}</span>
+                                                                @if(strtolower($sertifikat->status) == 'verified' || strtolower($sertifikat->status) == 'valid')
+                                                                    <a href="{{ route('certificate.verify', $sertifikat->id) }}" target="_blank" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                                                                        Lihat <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            @endif
+
                                             <!-- Socials -->
                                             @if($app->talent->linkedin || $app->talent->portfolio || $app->talent->hobi)
                                             <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl flex flex-wrap gap-6 text-sm">

@@ -9,15 +9,38 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-                function printCertificate(url) {
-                    const printWindow = window.open(url, '_blank');
-                    print Window.onloa d = function () {
-                        setTimeout(() => {
-                            printWindow.print();
-                        }, 500);
-                    };
+        function printCertificate(url) {
+            const printWindow = window.open(url, '_blank');
+            printWindow.onload = function () {
+                setTimeout(() => {
+                    printWindow.print();
+                }, 500);
+            };
+        }
+
+        function confirmVerification(event, name) {
+            event.preventDefault();
+            const form = event.target.closest('form');
+            
+            Swal.fire({
+                title: 'Setujui Verifikasi?',
+                text: "Apakah Anda yakin ingin menyetujui verifikasi sertifikat untuk " + name + "?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Setujui',
+                cancelButtonText: 'Batal',
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
+                color: document.documentElement.classList.contains('dark') ? '#fff' : '#0f172a',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
                 }
+            });
+        }
     </script>
 @endpush
 
@@ -124,9 +147,11 @@
                                             <span class="material-symbols-outlined">chat</span>
                                         </a>
                                         <form action="{{ route('admin.verification.certificates.approve', $sertifikat->id) }}"
-                                            method="POST" onsubmit="return confirm('Setujui verifikasi sertifikat ini?')">
+                                            method="POST">
                                             @csrf
                                             <button type="submit"
+                                                data-name="{{ $sertifikat->user->talent->nama_lengkap ?? $sertifikat->user->name }}"
+                                                onclick="confirmVerification(event, this.getAttribute('data-name'))"
                                                 class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                                                 title="Setujui">
                                                 <span class="material-symbols-outlined">check_circle</span>

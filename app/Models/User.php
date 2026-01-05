@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(HasilTes::class, 'user_id');
     }
+
+    public function sertifikats()
+    {
+        return $this->hasMany(Sertifikat::class, 'user_id');
+    }
 }

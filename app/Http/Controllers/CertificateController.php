@@ -15,6 +15,20 @@ class CertificateController extends Controller
         return view('talent.certificates.index', compact('certificates'));
     }
 
+    public function show(Sertifikat $sertifikat)
+    {
+        if ($sertifikat->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Generate Signed URL for the QR Code
+        // Use ID to generate route
+        // Generate Normal Route URL for the QR Code (User requested signed route removal due to 403)
+        $verificationUrl = route('certificate.verify', ['id' => $sertifikat->id]);
+
+        return view('talent.certificates.show', compact('sertifikat', 'verificationUrl'));
+    }
+
     public function store(Request $request)
     {
         \Log::info('Store Certificate Request:', $request->all());

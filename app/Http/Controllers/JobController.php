@@ -87,7 +87,7 @@ class JobController extends Controller
         $umkmId = Auth::user()->umkm->id;
         $applicants = Lamaran::whereHas('lowongan', function ($q) use ($umkmId) {
             $q->where('umkm_id', $umkmId);
-        })->with(['talent.user', 'lowongan'])->latest()->get();
+        })->with(['talent.user.sertifikats', 'lowongan'])->latest()->get();
 
         return view('umkm.applicants.index', compact('applicants'));
     }

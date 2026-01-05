@@ -19,6 +19,10 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Public Verification Route
+Route::get('/certificate/verify/{id}', [App\Http\Controllers\PublicController::class, 'verifyCertificate'])
+    ->name('certificate.verify');
+
 
 Route::middleware(['auth'])->group(function () {
     // Shared Dashboard & Notification Routes
@@ -77,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jobs/{lowongan}', [JobController::class, 'show'])->name('jobs.show');
         Route::post('/jobs/{lowongan}/apply', [JobController::class, 'apply'])->name('jobs.apply');
         Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates');
+        Route::get('/certificates/{sertifikat}', [CertificateController::class, 'show'])->name('certificates.show');
         Route::post('/certificates', [CertificateController::class, 'store'])->name('certificates.store');
         Route::post('/certificates/{sertifikat}', [CertificateController::class, 'update'])->name('certificates.update');
         Route::delete('/certificates/{sertifikat}', [CertificateController::class, 'destroy'])->name('certificates.destroy');
