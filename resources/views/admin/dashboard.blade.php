@@ -146,6 +146,21 @@
                     <div id="verificationChart" class="w-full min-h-[300px]"></div>
                 </div>
 
+                <!-- Additional Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mt-6">
+                    <!-- Application Status Chart -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+                        <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-6">Status Lamaran</h3>
+                        <div id="applicationChart" class="w-full min-h-[300px]"></div>
+                    </div>
+
+                    <!-- Popular Skills Chart -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+                        <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-6">Tes Skill Terpopuler</h3>
+                        <div id="skillChart" class="w-full min-h-[300px]"></div>
+                    </div>
+                </div>
+
                 @push('scripts')
                     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
                     <script>
@@ -153,9 +168,17 @@
                             return {
                                 currentRange: 'seven_days',
                                 chart: null,
+                                appChart: null,
+                                skillChart: null,
                                 chartData: @json($chartData),
                                 
                                 initChart() {
+                                    this.initVerificationChart();
+                                    this.initApplicationChart();
+                                    this.initSkillChart();
+                                },
+
+                                initVerificationChart() {
                                     const options = {
                                         series: [{
                                             name: 'Permintaan Verifikasi',
@@ -179,22 +202,12 @@
                                         legend: { show: false },
                                         xaxis: {
                                             categories: this.chartData[this.currentRange].labels,
-                                            labels: {
-                                                style: {
-                                                    colors: '#64748b',
-                                                    fontSize: '12px'
-                                                }
-                                            },
+                                            labels: { style: { colors: '#64748b', fontSize: '12px' } },
                                             axisBorder: { show: false },
                                             axisTicks: { show: false }
                                         },
                                         yaxis: {
-                                            labels: {
-                                                style: {
-                                                    colors: '#64748b',
-                                                    fontSize: '12px'
-                                                }
-                                            }
+                                            labels: { style: { colors: '#64748b', fontSize: '12px' } }
                                         },
                                         grid: {
                                             borderColor: '#e2e8f0',
@@ -206,7 +219,6 @@
                                         }
                                     };
                                     
-                                    // Update grid color for dark mode
                                     if(document.documentElement.classList.contains('dark')) {
                                         options.grid.borderColor = '#334155';
                                         options.chart.background = 'transparent';
@@ -214,9 +226,82 @@
 
                                     this.chart = new ApexCharts(document.querySelector("#verificationChart"), options);
                                     this.chart.render();
+                                },
+
+                                initApplicationChart() {
+                                    const options = {
+                                        series: this.chartData.applications.data.length ? this.chartData.applications.data : [1], // Placeholder if empty
+                                        labels: this.chartData.applications.labels.length ? this.chartData.applications.labels : ['Belum ada data'],
+                                        chart: {
+                                            type: 'donut',
+                                            height: 350,
+                                            fontFamily: 'Inter, sans-serif'
+                                        },
+                                        colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1'],
+                                        dataLabels: { enabled: true },
+                                        legend: { 
+                                            position: 'bottom',
+                                            labels: { colors: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' }
+                                        },
+                                        theme: {
+                                            mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+                                        },
+                                        stroke: { show: false }
+                                    };
                                     
-                                    // Listen for theme changes if you have a theme switcher that emits events or changes class
-                                    // For now, simple init is enough.
+                                    if(document.documentElement.classList.contains('dark')) {
+                                        options.chart.background = 'transparent';
+                                    }
+
+                                    this.appChart = new ApexCharts(document.querySelector("#applicationChart"), options);
+                                    this.appChart.render();
+                                },
+
+                                initSkillChart() {
+                                    const options = {
+                                        series: [{
+                                            name: 'Jumlah Peserta',
+                                            data: this.chartData.skills.data
+                                        }],
+                                        chart: {
+                                            type: 'bar',
+                                            height: 350,
+                                            toolbar: { show: false },
+                                            fontFamily: 'Inter, sans-serif'
+                                        },
+                                        plotOptions: {
+                                            bar: {
+                                                borderRadius: 4,
+                                                horizontal: true,
+                                                barHeight: '50%'
+                                            }
+                                        },
+                                        colors: ['#8b5cf6'],
+                                        dataLabels: { enabled: false },
+                                        xaxis: {
+                                            categories: this.chartData.skills.labels,
+                                            labels: { style: { colors: '#64748b', fontSize: '12px' } }
+                                        },
+                                        yaxis: {
+                                            labels: { style: { colors: '#64748b', fontSize: '12px' } }
+                                        },
+                                        grid: {
+                                            borderColor: '#e2e8f0',
+                                            strokeDashArray: 4,
+                                            xaxis: { lines: { show: true } } 
+                                        },
+                                        theme: {
+                                            mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+                                        }
+                                    };
+
+                                    if(document.documentElement.classList.contains('dark')) {
+                                        options.grid.borderColor = '#334155';
+                                        options.chart.background = 'transparent';
+                                    }
+
+                                    this.skillChart = new ApexCharts(document.querySelector("#skillChart"), options);
+                                    this.skillChart.render();
                                 },
 
                                 updateChart() {

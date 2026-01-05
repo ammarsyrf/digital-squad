@@ -195,12 +195,39 @@ class DashboardController extends Controller
             $dataYear[] = $count;
         }
 
+        // ... existing chart logic ...
+
         $chartData = [
             'seven_days' => ['labels' => $labels7Days, 'data' => $data7Days],
             'thirty_days' => ['labels' => $labels30Days, 'data' => $data30Days],
             'last_month' => ['labels' => $labelsLastMonth, 'data' => $dataLastMonth],
             'year' => ['labels' => $months, 'data' => $dataYear],
         ];
+
+        // 4. Additional Charts Data
+        
+        // Application Status Distribution
+        $applicationStats = Lamaran::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+        
+        // Standardize statuses if needed or just use as is
+        $appLabels = $applicationStats->keys();
+        $appData = $applicationStats->values();
+
+        // Popular Skill Tests
+        $popularSkills = HasilTes::select('kategori_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('kategori_id')
+            ->with('kategori')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
+            
+        $skillLabels = $popularSkills->map(fn($item) => $item->kategori->nama_kategori ?? 'Unknown');
+        $skillData = $popularSkills->pluck('total');
+
+        $chartData['applications'] = ['labels' => $appLabels, 'data' => $appData];
+        $chartData['skills'] = ['labels' => $skillLabels, 'data' => $skillData];
 
         return view('admin.dashboard', compact('stats', 'activities', 'chartData'));
     }
