@@ -17,14 +17,166 @@ class DashboardController extends Controller
 {
     public function admin()
     {
+        // 1. Basic Counts
+        $totalTalent = \App\Models\User::where('role', 'talent')->count();
+        $totalUmkm = Umkm::count();
+        $totalLowongan = Lowongan::where('status', 'aktif')->count();
+        $pendingSertifikat = Sertifikat::where('status', 'pending')->count();
+        $pendingUmkm = Umkm::where('status_verifikasi', 'pending')->count();
+
+        // 2. Growth Calculation (Current Month vs Last Month)
+        $now = \Carbon\Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
+        $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
+
+        // Talent Growth (Based on User creation)
+        $talentThisMonth = \App\Models\User::where('role', 'talent')->where('created_at', '>=', $startOfMonth)->count();
+        $talentLastMonth = \App\Models\User::where('role', 'talent')->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $talentGrowth = $talentLastMonth > 0 ? (($talentThisMonth - $talentLastMonth) / $talentLastMonth) * 100 : 100;
+
+        // UMKM Growth
+        $umkmThisMonth = Umkm::where('created_at', '>=', $startOfMonth)->count();
+        $umkmLastMonth = Umkm::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $umkmGrowth = $umkmLastMonth > 0 ? (($umkmThisMonth - $umkmLastMonth) / $umkmLastMonth) * 100 : 100;
+
+        // Lowongan Growth
+        $lowonganThisMonth = Lowongan::where('created_at', '>=', $startOfMonth)->count();
+        $lowonganLastMonth = Lowongan::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $lowonganGrowth = $lowonganLastMonth > 0 ? (($lowonganThisMonth - $lowonganLastMonth) / $lowonganLastMonth) * 100 : 100;
+
+        // Specific Stats
+        $talentToday = \App\Models\User::where('role', 'talent')->whereDate('created_at', \Carbon\Carbon::today())->count();
+
         $stats = [
-            'total_talent' => Talent::count(),
-            'total_umkm' => Umkm::count(),
-            'total_lowongan' => Lowongan::where('status', 'aktif')->count(),
-            'pending_sertifikat' => Sertifikat::where('status', 'pending')->count(),
+            'total_talent' => $totalTalent,
+            'total_umkm' => $totalUmkm,
+            'total_lowongan' => $totalLowongan,
+            'pending_sertifikat' => $pendingSertifikat,
+            'pending_umkm' => $pendingUmkm,
+            'talent_growth' => round($talentGrowth),
+            'umkm_growth' => round($umkmGrowth),
+            'lowongan_growth' => round($lowonganGrowth),
+            'talent_today' => $talentToday,
+            'talent_month' => $talentThisMonth,
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        // Fetch recent activities
+        $activities = collect();
+
+        $newCerts = Sertifikat::with('user')->latest()->take(5)->get()->map(function($item){
+            return [
+                'type' => 'certificate',
+                'message' => ($item->user->name ?? 'User') . ' mengunggah sertifikat ' . $item->nama_sertifikat,
+                'time' => $item->created_at,
+                'icon' => 'card_membership',
+                'color' => 'blue'
+            ];
+        });
+
+        $newUmkms = Umkm::with('user')->latest()->take(5)->get()->map(function($item){
+            return [
+                'type' => 'umkm',
+                'message' => 'UMKM Baru: ' . $item->nama_umkm . ' mendaftar',
+                'time' => $item->created_at,
+                'icon' => 'store',
+                'color' => 'emerald'
+            ];
+        });
+
+        // Use User model for new talents
+        $newTalents = \App\Models\User::where('role', 'talent')->latest()->take(5)->get()->map(function($item){
+            return [
+                'type' => 'talent',
+                'message' => 'Talenta Baru: ' . $item->name . ' bergabung',
+                'time' => $item->created_at,
+                'icon' => 'person_add',
+                'color' => 'indigo'
+            ];
+        });
+
+        $newJobs = Lowongan::with('umkm')->latest()->take(5)->get()->map(function($item){
+            return [
+                'type' => 'job',
+                'message' => 'Lowongan Baru: ' . $item->judul . ' di ' . ($item->umkm->nama_umkm ?? 'UMKM'),
+                'time' => $item->created_at,
+                'icon' => 'work_outline',
+                'color' => 'orange'
+            ];
+        });
+
+        $activities = $activities->merge($newCerts)
+                                 ->merge($newUmkms)
+                                 ->merge($newTalents)
+                                 ->merge($newJobs)
+                                 ->sortByDesc('time')
+                                 ->take(10);
+
+        // Chart Statistics
+        $endDate = \Carbon\Carbon::now();
+        
+        // 1. Data for 30 Days (covering 7 days as well)
+        $startDate30 = $endDate->copy()->subDays(29);
+        $period30 = \Carbon\CarbonPeriod::create($startDate30, $endDate);
+        
+        $sertifikat30 = Sertifikat::where('created_at', '>=', $startDate30)->get()->groupBy(function($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+        $umkm30 = Umkm::where('created_at', '>=', $startDate30)->get()->groupBy(function($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+
+        $data30Days = [];
+        $labels30Days = [];
+        $data7Days = [];
+        $labels7Days = [];
+
+        $checkDate7 = $endDate->copy()->subDays(6);
+
+        foreach ($period30 as $date) {
+            $dateString = $date->format('Y-m-d');
+            $count = ($sertifikat30->has($dateString) ? $sertifikat30[$dateString]->count() : 0) + 
+                     ($umkm30->has($dateString) ? $umkm30[$dateString]->count() : 0);
+            
+            $data30Days[] = $count;
+            $labels30Days[] = $date->format('d M');
+
+            // Filter for last 7 days including today
+            if ($date->gte($checkDate7)) {
+                $data7Days[] = $count;
+                $labels7Days[] = $date->locale('id')->isoFormat('dddd');
+            }
+        }
+
+        // 2. Data for Yearly (Current Year)
+        $startYear = $endDate->copy()->startOfYear();
+        $months = [];
+        $dataYear = [];
+        
+        $sertifikatYear = Sertifikat::where('created_at', '>=', $startYear)
+            ->selectRaw('count(*) as count, MONTH(created_at) as month')
+            ->groupBy('month')
+            ->pluck('count', 'month');
+            
+        $umkmYear = Umkm::where('created_at', '>=', $startYear)
+            ->selectRaw('count(*) as count, MONTH(created_at) as month')
+            ->groupBy('month')
+            ->pluck('count', 'month');
+
+        for ($m = 1; $m <= 12; $m++) {
+            $monthDate = \Carbon\Carbon::createFromDate(null, $m, 1);
+            $months[] = $monthDate->locale('id')->isoFormat('MMMM');
+            $count = ($sertifikatYear[$m] ?? 0) + ($umkmYear[$m] ?? 0);
+            $dataYear[] = $count;
+        }
+
+        $chartData = [
+            'seven_days' => ['labels' => $labels7Days, 'data' => $data7Days],
+            'thirty_days' => ['labels' => $labels30Days, 'data' => $data30Days],
+            'year' => ['labels' => $months, 'data' => $dataYear],
+        ];
+
+        return view('admin.dashboard', compact('stats', 'activities', 'chartData'));
     }
 
     public function talent()

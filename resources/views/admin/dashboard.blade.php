@@ -26,11 +26,11 @@
                         <span class="material-symbols-outlined">group</span>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center text-sm">
+                <div class="mt-4 flex flex-col text-sm">
                     <span class="text-emerald-600 font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-base">trending_up</span> +5%
+                        <span class="material-symbols-outlined text-base">trending_up</span> +{{ $stats['talent_growth'] }}%
                     </span>
-                    <span class="text-slate-400 ml-2">bulan ini</span>
+                    <span class="text-slate-400 text-xs mt-1">Hari ini: {{ $stats['talent_today'] }} · Bulan ini: {{ $stats['talent_month'] }}</span>
                 </div>
             </div>
             <!-- Stat Card 2 -->
@@ -67,7 +67,7 @@
                 </div>
                 <div class="mt-4 flex items-center text-sm">
                     <span class="text-emerald-600 font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-base">trending_up</span> +2%
+                        <span class="material-symbols-outlined text-base">trending_up</span> +{{ $stats['umkm_growth'] }}%
                     </span>
                     <span class="text-slate-400 ml-2">bulan ini</span>
                 </div>
@@ -86,9 +86,9 @@
                 </div>
                 <div class="mt-4 flex items-center text-sm">
                     <span class="text-emerald-600 font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-base">trending_up</span> +8%
+                        <span class="material-symbols-outlined text-base">trending_up</span> +{{ $stats['lowongan_growth'] }}%
                     </span>
-                    <span class="text-slate-400 ml-2">minggu ini</span>
+                    <span class="text-slate-400 ml-2">bulan ini</span>
                 </div>
             </div>
         </div>
@@ -111,7 +111,7 @@
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-lg">Verifikasi Sertifikat</h3>
-                                    <p class="text-blue-100 text-sm mt-1">15 permintaan menunggu</p>
+                                    <p class="text-blue-100 text-sm mt-1">{{ $stats['pending_sertifikat'] }} permintaan menunggu</p>
                                 </div>
                             </div>
                         </div>
@@ -124,36 +124,115 @@
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-lg text-slate-800 dark:text-white">Verifikasi Akun UMKM</h3>
-                                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Review 5 pendaftaran baru</p>
+                                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Review {{ $stats['pending_umkm'] }} pendaftaran baru</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Analytic Chart Placeholder -->
-                <div
-                    class="bg-surface-light dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+                <!-- Analytic Chart -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+                     x-data="verificationChart()" x-init="initChart()">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="font-bold text-lg text-slate-800 dark:text-white">Statistik Verifikasi</h3>
-                        <select
+                        <select x-model="currentRange" @change="updateChart()"
                             class="text-sm bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-600 dark:text-slate-300 focus:ring-0 cursor-pointer">
-                            <option>7 Hari Terakhir</option>
-                            <option>30 Hari Terakhir</option>
+                            <option value="seven_days">7 Hari Terakhir</option>
+                            <option value="thirty_days">30 Hari Terakhir</option>
+                            <option value="year">Tahun Ini</option>
                         </select>
                     </div>
-                    <div class="h-64 w-full flex items-end justify-between gap-2 px-2">
-                        <div class="w-full bg-primary/20 rounded-t-sm h-[40%]"></div>
-                        <div class="w-full bg-primary/40 rounded-t-sm h-[60%]"></div>
-                        <div class="w-full bg-primary/30 rounded-t-sm h-[30%]"></div>
-                        <div class="w-full bg-primary/60 rounded-t-sm h-[75%]"></div>
-                        <div class="w-full bg-primary/50 rounded-t-sm h-[50%]"></div>
-                        <div class="w-full bg-primary/80 rounded-t-sm h-[85%]"></div>
-                        <div class="w-full bg-primary rounded-t-sm h-[65%]"></div>
-                    </div>
-                    <div class="flex justify-between mt-2 text-xs text-slate-400 px-2">
-                        <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
-                    </div>
+                    <div id="verificationChart" class="w-full min-h-[300px]"></div>
                 </div>
+
+                @push('scripts')
+                    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+                    <script>
+                        function verificationChart() {
+                            return {
+                                currentRange: 'seven_days',
+                                chart: null,
+                                chartData: @json($chartData),
+                                
+                                initChart() {
+                                    const options = {
+                                        series: [{
+                                            name: 'Permintaan Verifikasi',
+                                            data: this.chartData[this.currentRange].data
+                                        }],
+                                        chart: {
+                                            type: 'bar',
+                                            height: 350,
+                                            toolbar: { show: false },
+                                            fontFamily: 'Inter, sans-serif'
+                                        },
+                                        colors: ['#3b82f6'],
+                                        plotOptions: {
+                                            bar: {
+                                                borderRadius: 4,
+                                                columnWidth: '50%',
+                                                distributed: true
+                                            }
+                                        },
+                                        dataLabels: { enabled: false },
+                                        legend: { show: false },
+                                        xaxis: {
+                                            categories: this.chartData[this.currentRange].labels,
+                                            labels: {
+                                                style: {
+                                                    colors: '#64748b',
+                                                    fontSize: '12px'
+                                                }
+                                            },
+                                            axisBorder: { show: false },
+                                            axisTicks: { show: false }
+                                        },
+                                        yaxis: {
+                                            labels: {
+                                                style: {
+                                                    colors: '#64748b',
+                                                    fontSize: '12px'
+                                                }
+                                            }
+                                        },
+                                        grid: {
+                                            borderColor: '#e2e8f0',
+                                            strokeDashArray: 4,
+                                            yaxis: { lines: { show: true } } 
+                                        },
+                                        theme: {
+                                            mode: document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+                                        }
+                                    };
+                                    
+                                    // Update grid color for dark mode
+                                    if(document.documentElement.classList.contains('dark')) {
+                                        options.grid.borderColor = '#334155';
+                                        options.chart.background = 'transparent';
+                                    }
+
+                                    this.chart = new ApexCharts(document.querySelector("#verificationChart"), options);
+                                    this.chart.render();
+                                    
+                                    // Listen for theme changes if you have a theme switcher that emits events or changes class
+                                    // For now, simple init is enough.
+                                },
+
+                                updateChart() {
+                                    const newData = this.chartData[this.currentRange];
+                                    this.chart.updateOptions({
+                                        xaxis: {
+                                            categories: newData.labels
+                                        }
+                                    });
+                                    this.chart.updateSeries([{
+                                        data: newData.data
+                                    }]);
+                                }
+                            }
+                        }
+                    </script>
+                @endpush
             </div>
             <!-- Right Column: Activity -->
             <div class="lg:col-span-1">
@@ -164,18 +243,19 @@
                         <span class="material-symbols-outlined text-slate-400">history</span>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2">
-                        <div
-                            class="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex gap-3">
-                            <div
-                                class="mt-1 size-8 shrink-0 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-sm">upload_file</span>
+                        @forelse($activities as $activity)
+                            <div class="p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex gap-3">
+                                <div class="mt-1 size-8 shrink-0 rounded-full bg-{{ $activity['color'] }}-100 text-{{ $activity['color'] }}-600 dark:bg-{{ $activity['color'] }}-900/30 dark:text-{{ $activity['color'] }}-400 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-sm">{{ $activity['icon'] }}</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ $activity['message'] }}</p>
+                                    <p class="text-xs text-slate-500 mt-1">{{ $activity['time']->diffForHumans() }}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm font-medium text-slate-800 dark:text-slate-200">Ahmad S. mengunggah
-                                    sertifikat</p>
-                                <p class="text-xs text-slate-500 mt-1">5 menit yang lalu</p>
-                            </div>
-                        </div>
+                        @empty
+                            <div class="p-4 text-center text-slate-500 text-sm">Belum ada aktivitas terbaru.</div>
+                        @endforelse
                     </div>
                 </div>
             </div>
