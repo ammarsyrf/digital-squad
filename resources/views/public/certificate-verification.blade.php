@@ -71,7 +71,7 @@
                     </div>
                     <div>
                          <p class="text-xs uppercase text-gray-400 font-bold tracking-wider mb-1">ID Verifikasi</p>
-                         <p class="font-mono text-sm text-gray-600 truncate">{{ md5($sertifikat->id . $sertifikat->created_at) }}</p>
+                         <p class="font-mono text-sm text-gray-600 truncate">{{ md5($sertifikat->id_sertifikat . $sertifikat->created_at) }}</p>
                     </div>
                 </div>
 

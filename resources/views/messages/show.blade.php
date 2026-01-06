@@ -39,8 +39,8 @@
                             $displayRole = 'Instansi';
                         }
                     @endphp
-                    <a href="{{ route('messages.show', $contact->id) }}"
-                        class="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors {{ $contact->id == $user->id ? 'bg-primary/5 border-l-4 border-primary' : 'border-b border-slate-50 dark:border-slate-800/50' }}">
+                    <a href="{{ route('messages.show', $contact->id_users) }}"
+                        class="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors {{ $contact->id_users == $user->id_users ? 'bg-primary/5 border-l-4 border-primary' : 'border-b border-slate-50 dark:border-slate-800/50' }}">
                         <div
                             class="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20 overflow-hidden">
                             @if($photoUrl)
@@ -135,7 +135,7 @@
             <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
                 <form action="{{ route('messages.send') }}" method="POST" class="flex gap-3">
                     @csrf
-                    <input type="hidden" name="receiver_id" value="{{ $user->id }}">
+                    <input type="hidden" name="receiver_id" value="{{ $user->id_users }}">
                     <div class="flex-1 relative">
                         <input type="text" name="pesan" placeholder="Ketik pesan..." required autofocus
                             class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all">

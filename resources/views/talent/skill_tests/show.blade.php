@@ -13,7 +13,7 @@
             <p class="text-slate-500">Pilih jawaban yang menurut Anda paling tepat.</p>
         </div>
 
-        <form action="{{ route('talent.skill-tests.submit', $category->id) }}" method="POST" class="space-y-6"
+        <form action="{{ route('talent.skill-tests.submit', $category->id_kategori_skill) }}" method="POST" class="space-y-6"
             x-data="{ submitting: false }" @submit="submitting = true">
             @csrf
             @foreach($questions as $index => $q)
@@ -31,7 +31,7 @@
                                     @php $field = "opsi_" . $opt; @endphp
                                     <label
                                         class="relative flex items-center p-4 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 group">
-                                        <input type="radio" name="answers[{{ $q->id }}]" value="{{ strtoupper($opt) }}"
+                                        <input type="radio" name="answers[{{ $q->id_soal_skill }}]" value="{{ strtoupper($opt) }}"
                                             class="peer opacity-0 absolute inset-0 w-full h-full z-10 cursor-pointer" required>
                                         <div
                                             class="size-5 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary mr-3 flex items-center justify-center transition-all relative z-0">

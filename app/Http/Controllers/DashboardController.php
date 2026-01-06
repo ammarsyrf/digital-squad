@@ -238,30 +238,30 @@ class DashboardController extends Controller
         $talent = $user->talent;
 
         if (!$talent) {
-            $talent = Talent::create(['user_id' => $user->id, 'nama_lengkap' => $user->name]);
+            $talent = Talent::create(['user_id' => $user->id_users, 'nama_lengkap' => $user->name]);
         }
 
         $stats = [
-            'total_lamaran' => Lamaran::where('talent_id', $talent->id)->count(),
+            'total_lamaran' => Lamaran::where('talent_id', $talent->id_talent)->count(),
             'total_tes' => $user->hasilTes ? $user->hasilTes()->count() : 0,
-            'total_sertifikat' => Sertifikat::where('user_id', $user->id)->count(),
+            'total_sertifikat' => Sertifikat::where('user_id', $user->id_users)->count(),
             'profile_completion' => $this->calculateProfileCompletion($talent),
             'rata_skor' => $user->hasilTes ? round($user->hasilTes()->avg('skor')) : 0,
         ];
 
         $recent_lamaran = Lamaran::with(['lowongan.umkm'])
-            ->where('talent_id', $talent->id)
+            ->where('talent_id', $talent->id_talent)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
         $skills_data = HasilTes::with('kategori')
-            ->where('user_id', $user->id)
+            ->where('user_id', $user->id_users)
             ->orderBy('skor', 'desc')
             ->limit(5)
             ->get();
 
-        $recent_sertifikat = Sertifikat::where('user_id', $user->id)
+        $recent_sertifikat = Sertifikat::where('user_id', $user->id_users)
             ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get();
@@ -276,30 +276,30 @@ class DashboardController extends Controller
 
         if (!$umkm) {
             $umkm = Umkm::create([
-                'user_id' => $user->id,
+                'user_id' => $user->id_users,
                 'nama_umkm' => $user->name,
                 'email_instansi' => $user->email,
             ]);
         }
 
         $stats = [
-            'total_lowongan' => Lowongan::where('umkm_id', $umkm->id)->where('status', 'aktif')->count(),
+            'total_lowongan' => Lowongan::where('umkm_id', $umkm->id_umkm)->where('status', 'aktif')->count(),
             'total_pelamar' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
-                $q->where('umkm_id', $umkm->id);
+                $q->where('umkm_id', $umkm->id_umkm);
             })->count(),
             'total_review' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
-                $q->where('umkm_id', $umkm->id);
+                $q->where('umkm_id', $umkm->id_umkm);
             })->where('status', 'Pending')->count(),
             'total_wawancara' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
-                $q->where('umkm_id', $umkm->id);
+                $q->where('umkm_id', $umkm->id_umkm);
             })->where('status', 'Interview')->count(),
             'total_diterima' => Lamaran::whereHas('lowongan', function ($q) use ($umkm) {
-                $q->where('umkm_id', $umkm->id);
+                $q->where('umkm_id', $umkm->id_umkm);
             })->where('status', 'Diterima')->count(),
         ];
 
         $recent_lowongan = Lowongan::withCount('lamaran')
-            ->where('umkm_id', $umkm->id)
+            ->where('umkm_id', $umkm->id_umkm)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
@@ -336,12 +336,12 @@ class DashboardController extends Controller
             return redirect()->back()->with('error', 'Anda harus menjawab setidaknya satu soal.');
         }
 
-        $questions = SoalSkill::whereIn('id', $questionIds)->get();
+        $questions = SoalSkill::whereIn('id_soal_skill', $questionIds)->get();
         $correct = 0;
         $total = $questions->count();
 
         foreach ($questions as $q) {
-            $userAnswer = $answers[$q->id] ?? null;
+            $userAnswer = $answers[$q->id_soal_skill] ?? null;
             if ($userAnswer && strtoupper($userAnswer) == strtoupper($q->jawaban_benar)) {
                 $correct++;
             }
@@ -351,7 +351,7 @@ class DashboardController extends Controller
 
         HasilTes::create([
             'user_id' => Auth::id(),
-            'kategori_id' => $category->id,
+            'kategori_id' => $category->id_kategori_skill,
             'skor' => round($score, 2),
             'total_soal' => $total,
             'jawaban_benar' => $correct,

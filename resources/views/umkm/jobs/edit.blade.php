@@ -13,7 +13,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
             <h2 class="text-xl font-bold mb-6">Informasi Pekerjaan</h2>
 
-            <form action="{{ route('umkm.jobs.update', $lowongan->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('umkm.jobs.update', $lowongan->id_lowongan) }}" method="POST" class="space-y-6">
                 @csrf
                 {{-- No @method('PUT') because the route is defined as POST --}}
 

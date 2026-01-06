@@ -118,7 +118,7 @@
                                                     Jadwalkan Wawancara
                                                 </button>
 
-                                                <form action="{{ route('umkm.applicants.status', $app->id) }}" method="POST">
+                                                <form action="{{ route('umkm.applicants.status', $app->id_lamaran) }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="status" value="Diterima">
                                                     <button type="submit"
@@ -128,7 +128,7 @@
                                                     </button>
                                                 </form>
 
-                                                <form action="{{ route('umkm.applicants.status', $app->id) }}" method="POST">
+                                                <form action="{{ route('umkm.applicants.status', $app->id_lamaran) }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="status" value="Ditolak">
                                                     <button type="submit"
@@ -343,7 +343,7 @@
                                                             <div class="flex items-center justify-between mt-auto pt-3 border-t border-slate-100 dark:border-slate-700">
                                                                 <span class="text-[10px] text-slate-400 font-medium">{{ \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('M Y') }}</span>
                                                                 @if(strtolower($sertifikat->status) == 'verified' || strtolower($sertifikat->status) == 'valid')
-                                                                    <a href="{{ route('certificate.verify', $sertifikat->id) }}" target="_blank" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                                                                    <a href="{{ route('certificate.verify', $sertifikat->id_sertifikat) }}" target="_blank" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
                                                                         Lihat <span class="material-symbols-outlined text-[14px]">open_in_new</span>
                                                                     </a>
                                                                 @endif
@@ -449,7 +449,7 @@
                                         </div>
 
                                         <!-- Form -->
-                                        <form action="{{ route('umkm.applicants.schedule', $app->id) }}" method="POST" class="p-6 md:p-8 space-y-6">
+                                        <form action="{{ route('umkm.applicants.schedule', $app->id_lamaran) }}" method="POST" class="p-6 md:p-8 space-y-6">
                                             @csrf
                                             
                                             <div class="grid grid-cols-2 gap-6">

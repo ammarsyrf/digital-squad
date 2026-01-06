@@ -345,12 +345,12 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium no-print">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                                        <a href="{{ route('admin.users.edit', $user->id_users) }}"
                                             class="text-slate-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors p-1"
                                             title="Edit">
                                             <span class="material-symbols-outlined text-[20px]">edit</span>
                                         </a>
-                                        <form action="{{ route('admin.users.delete', $user->id) }}" method="POST"
+                                        <form action="{{ route('admin.users.delete', $user->id_users) }}" method="POST"
                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');"
                                             class="inline">
                                             @csrf

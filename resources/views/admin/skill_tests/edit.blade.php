@@ -43,7 +43,7 @@
         <!-- Form -->
         <div
             class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl shadow-sm p-6">
-            <form action="{{ route('admin.skill-tests.update', $soal->id) }}" method="POST">
+            <form action="{{ route('admin.skill-tests.update', $soal->id_soal_skill) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -56,7 +56,7 @@
                                 class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-primary focus:border-primary sm:text-sm">
                                 <option value="">Pilih Kategori</option>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('kategori_id', $soal->kategori_id) == $category->id ? 'selected' : '' }}>{{ $category->nama_kategori }}</option>
+                                    <option value="{{ $category->id_kategori_skill }}" {{ old('kategori_id', $soal->kategori_id) == $category->id_kategori_skill ? 'selected' : '' }}>{{ $category->nama_kategori }}</option>
                                 @endforeach
                             </select>
                             @error('kategori_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror

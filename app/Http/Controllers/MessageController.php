@@ -27,13 +27,13 @@ class MessageController extends Controller
             $contact = User::find($conv->contact_id);
             if ($contact) {
                 $lastMsg = Pesan::where(function ($q) use ($userId, $contact) {
-                    $q->where('sender_id', $userId)->where('receiver_id', $contact->id);
+                    $q->where('sender_id', $userId)->where('receiver_id', $contact->id_users);
                 })->orWhere(function ($q) use ($userId, $contact) {
-                    $q->where('sender_id', $contact->id)->where('receiver_id', $userId);
+                    $q->where('sender_id', $contact->id_users)->where('receiver_id', $userId);
                 })->orderBy('created_at', 'desc')->first();
 
                 $contact->last_message = $lastMsg;
-                $contact->unread_count = Pesan::where('sender_id', $contact->id)
+                $contact->unread_count = Pesan::where('sender_id', $contact->id_users)
                     ->where('receiver_id', $userId)
                     ->where('is_read', 0)
                     ->count();
@@ -49,14 +49,14 @@ class MessageController extends Controller
         $userId = Auth::id();
 
         // Mark as read
-        Pesan::where('sender_id', $user->id)
+        Pesan::where('sender_id', $user->id_users)
             ->where('receiver_id', $userId)
             ->update(['is_read' => 1]);
 
         $messages = Pesan::where(function ($q) use ($userId, $user) {
-            $q->where('sender_id', $userId)->where('receiver_id', $user->id);
+            $q->where('sender_id', $userId)->where('receiver_id', $user->id_users);
         })->orWhere(function ($q) use ($userId, $user) {
-            $q->where('sender_id', $user->id)->where('receiver_id', $userId);
+            $q->where('sender_id', $user->id_users)->where('receiver_id', $userId);
         })->orderBy('created_at', 'asc')->get();
 
         // Get contacts list again for the sidebar in the view
@@ -72,12 +72,12 @@ class MessageController extends Controller
             $contact = User::find($conv->contact_id);
             if ($contact) {
                 $lastMsg = Pesan::where(function ($q) use ($userId, $contact) {
-                    $q->where('sender_id', $userId)->where('receiver_id', $contact->id);
+                    $q->where('sender_id', $userId)->where('receiver_id', $contact->id_users);
                 })->orWhere(function ($q) use ($userId, $contact) {
-                    $q->where('sender_id', $contact->id)->where('receiver_id', $userId);
+                    $q->where('sender_id', $contact->id_users)->where('receiver_id', $userId);
                 })->orderBy('created_at', 'desc')->first();
                 $contact->last_message = $lastMsg;
-                $contact->unread_count = Pesan::where('sender_id', $contact->id)->where('receiver_id', $userId)->where('is_read', 0)->count();
+                $contact->unread_count = Pesan::where('sender_id', $contact->id_users)->where('receiver_id', $userId)->where('is_read', 0)->count();
                 $contacts[] = $contact;
             }
         }

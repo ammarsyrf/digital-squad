@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SoalSkill extends Model
 {
     protected $table = 'soal_skill';
+    protected $primaryKey = 'id_soal_skill';
 
     protected $fillable = [
         'kategori_id',

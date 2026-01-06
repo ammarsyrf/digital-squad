@@ -103,7 +103,7 @@
                                     </div>
 
                                     <!-- Form -->
-                                    <form action="{{ route('talent.jobs.apply', $lowongan->id) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+                                    <form action="{{ route('talent.jobs.apply', $lowongan->id_lowongan) }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
                                         @csrf
                                         
                                         <!-- Warning Alert -->
@@ -285,7 +285,7 @@
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Tentang Instansi</h4>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-4">
                             {{ $lowongan->umkm->deskripsi ?? 'Instansi ini belum mencantumkan deskripsi profil mereka secara mendalam.' }}</p>
-                        <a href="{{ route('talent.umkm.show', $lowongan->umkm->id) }}" 
+                        <a href="{{ route('talent.umkm.show', $lowongan->umkm->id_umkm) }}" 
                             class="group flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10 hover:bg-primary/10 transition-all active:scale-95">
                             <span class="text-sm font-black text-primary">Lihat Profil Instansi</span>
                             <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>

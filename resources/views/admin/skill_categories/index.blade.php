@@ -65,11 +65,11 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.skill-categories.edit', $category->id) }}"
+                                    <a href="{{ route('admin.skill-categories.edit', $category->id_kategori_skill) }}"
                                         class="text-slate-400 hover:text-primary transition-colors" title="Edit">
                                         <span class="material-symbols-outlined">edit</span>
                                     </a>
-                                    <form action="{{ route('admin.skill-categories.delete', $category->id) }}" method="POST"
+                                    <form action="{{ route('admin.skill-categories.delete', $category->id_kategori_skill) }}" method="POST"
                                         class="inline delete-form">
                                         @csrf
                                         @method('DELETE')

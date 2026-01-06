@@ -44,7 +44,7 @@ class JobController extends Controller
             'fasilitas' => 'nullable|string',
         ]);
 
-        $validated['umkm_id'] = Auth::user()->umkm->id;
+        $validated['umkm_id'] = Auth::user()->umkm->id_umkm;
         $validated['status'] = 'Aktif';
 
         Lowongan::create($validated);
@@ -84,7 +84,7 @@ class JobController extends Controller
 
     public function applicants()
     {
-        $umkmId = Auth::user()->umkm->id;
+        $umkmId = Auth::user()->umkm->id_umkm;
         $applicants = Lamaran::whereHas('lowongan', function ($q) use ($umkmId) {
             $q->where('umkm_id', $umkmId);
         })->with(['talent.user.sertifikats', 'lowongan'])->latest()->get();
@@ -132,14 +132,14 @@ class JobController extends Controller
         // Send Message
         \App\Models\Pesan::create([
             'sender_id' => Auth::id(),
-            'receiver_id' => $talentUser->id,
+            'receiver_id' => $talentUser->id_users,
             'pesan' => $messageBody,
             'is_read' => false,
         ]);
 
         // Send Notification
         \App\Models\Notifikasi::create([
-            'user_id' => $talentUser->id,
+            'user_id' => $talentUser->id_users,
             'judul' => "Undangan Wawancara: $umkmName",
             'pesan' => "Anda telah diundang wawancara. Cek pesan masuk Anda untuk detail lengkap.",
             'link' => route('talent.messages'),
@@ -173,7 +173,7 @@ class JobController extends Controller
     {
         $lowongan->load('umkm');
         $talent = Auth::user()->talent;
-        $hasApplied = $talent ? Lamaran::where('talent_id', $talent->id)->where('lowongan_id', $lowongan->id)->exists() : false;
+        $hasApplied = $talent ? Lamaran::where('talent_id', $talent->id_talent)->where('lowongan_id', $lowongan->id_lowongan)->exists() : false;
         return view('talent.jobs.show', compact('lowongan', 'hasApplied'));
     }
 
@@ -184,7 +184,7 @@ class JobController extends Controller
             return redirect()->back()->with('error', 'Lengkapi profil talenta Anda terlebih dahulu.');
         }
 
-        if (Lamaran::where('talent_id', $talent->id)->where('lowongan_id', $lowongan->id)->exists()) {
+        if (Lamaran::where('talent_id', $talent->id_talent)->where('lowongan_id', $lowongan->id_lowongan)->exists()) {
             return redirect()->back()->with('error', 'Anda sudah melamar pekerjaan ini.');
         }
 
@@ -199,8 +199,8 @@ class JobController extends Controller
         }
 
         Lamaran::create([
-            'talent_id' => $talent->id,
-            'lowongan_id' => $lowongan->id,
+            'talent_id' => $talent->id_talent,
+            'lowongan_id' => $lowongan->id_lowongan,
             'status' => 'Pending',
             'cv_path' => $cvPath,
             'cover_letter' => $request->cover_letter,

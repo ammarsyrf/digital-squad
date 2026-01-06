@@ -24,7 +24,7 @@ class CertificateController extends Controller
         // Generate Signed URL for the QR Code
         // Use ID to generate route
         // Generate Normal Route URL for the QR Code (User requested signed route removal due to 403)
-        $verificationUrl = route('certificate.verify', ['id' => $sertifikat->id]);
+        $verificationUrl = route('certificate.verify', ['id' => $sertifikat->id_sertifikat]);
 
         return view('talent.certificates.show', compact('sertifikat', 'verificationUrl'));
     }

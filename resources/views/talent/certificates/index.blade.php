@@ -96,7 +96,7 @@
             @forelse($certificates as $cert)
                 @php
                     $ext = pathinfo($cert->file_path, PATHINFO_EXTENSION);
-                    $verifyUrl = route('certificate.verify', ['id' => $cert->id]);
+                    $verifyUrl = route('certificate.verify', ['id' => $cert->id_sertifikat]);
                     $isImage = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp']);
                 @endphp
                 <div @click="
@@ -127,7 +127,7 @@
                             class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
                             <button @click='
                                         editData = {
-                                            id: "{{ $cert->id }}",
+                                            id: "{{ $cert->id_sertifikat }}",
                                             nama_sertifikat: "{{ e($cert->nama_sertifikat) }}",
                                             penerbit: "{{ e($cert->penerbit) }}",
                                             tanggal_terbit: "{{ $cert->tanggal_terbit }}",
@@ -140,7 +140,7 @@
                                 <span class="material-symbols-outlined text-amber-500 text-xl">edit</span>
                                 Edit Data
                             </button>
-                            <button @click="selectedCert = {{ $cert->id }}; showDeleteModal = true; open = false;"
+                            <button @click="selectedCert = {{ $cert->id_sertifikat }}; showDeleteModal = true; open = false;"
                                 class="w-full flex items-center gap-3 px-4 py-3 text-sm text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-all text-left">
                                 <span class="material-symbols-outlined text-xl">delete</span>
                                 Hapus

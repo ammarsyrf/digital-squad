@@ -123,12 +123,12 @@
                                     </a>
 
                                     @if($umkm->status_verifikasi != 'Terverifikasi')
-                                        <button @click="openApprove('{{ $umkm->id }}', '{{ addslashes($umkm->nama_umkm) }}')"
+                                        <button @click="openApprove('{{ $umkm->id_umkm }}', '{{ addslashes($umkm->nama_umkm) }}')"
                                             class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                                             title="Setujui">
                                             <span class="material-symbols-outlined">check_circle</span>
                                         </button>
-                                        <button @click="openReject('{{ $umkm->id }}', '{{ addslashes($umkm->nama_umkm) }}')"
+                                        <button @click="openReject('{{ $umkm->id_umkm }}', '{{ addslashes($umkm->nama_umkm) }}')"
                                             class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Tolak">
                                             <span class="material-symbols-outlined">cancel</span>
                                         </button>

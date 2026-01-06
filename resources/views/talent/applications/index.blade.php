@@ -59,7 +59,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="{{ route('talent.jobs.show', $app->lowongan->id) }}"
+                                <a href="{{ route('talent.jobs.show', $app->lowongan->id_lowongan) }}"
                                     class="text-primary hover:underline text-sm font-bold">Detail</a>
                             </td>
                         </tr>

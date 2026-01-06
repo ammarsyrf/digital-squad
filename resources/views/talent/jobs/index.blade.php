@@ -34,7 +34,7 @@
         <!-- Job Feed -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($jobs as $job)
-                <a href="{{ route('talent.jobs.show', $job->id) }}"
+                <a href="{{ route('talent.jobs.show', $job->id_lowongan) }}"
                     class="block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden">
                     
                     <div class="absolute top-0 right-0 p-4 opacity-50">

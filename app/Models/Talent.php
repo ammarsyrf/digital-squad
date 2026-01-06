@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Talent extends Model
 {
     protected $table = 'talent';
+    protected $primaryKey = 'id_talent';
     public $timestamps = false; // Karena tabel native tidak punya updated_at secara default
 
     protected $fillable = [

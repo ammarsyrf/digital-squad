@@ -146,7 +146,7 @@
                                             title="Chat Pemilik">
                                             <span class="material-symbols-outlined">chat</span>
                                         </a>
-                                        <form action="{{ route('admin.verification.certificates.approve', $sertifikat->id) }}"
+                                        <form action="{{ route('admin.verification.certificates.approve', $sertifikat->id_sertifikat) }}"
                                             method="POST">
                                             @csrf
                                             <button type="submit"
@@ -157,7 +157,7 @@
                                                 <span class="material-symbols-outlined">check_circle</span>
                                             </button>
                                         </form>
-                                        <form action="{{ route('admin.verification.certificates.reject', $sertifikat->id) }}"
+                                        <form action="{{ route('admin.verification.certificates.reject', $sertifikat->id_sertifikat) }}"
                                             method="POST">
                                             @csrf
                                             <button type="submit"

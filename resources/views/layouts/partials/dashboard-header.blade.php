@@ -78,7 +78,7 @@
                 </div>
                 <div class="divide-y divide-slate-50 dark:divide-slate-700 max-h-96 overflow-y-auto">
                     @forelse($recentNotifs as $notif)
-                        <a href="{{ route('notifications.read', $notif->id) }}"
+                        <a href="{{ route('notifications.read', $notif->id_notifikasi) }}"
                             class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors {{ !$notif->is_read ? 'bg-blue-50/30 dark:bg-blue-900/10' : '' }}">
                             <p class="text-xs font-bold text-slate-900 dark:text-white">{{ $notif->judul }}</p>
                             <p class="text-[10px] text-slate-500 line-clamp-2 mt-1">{{ $notif->pesan }}</p>

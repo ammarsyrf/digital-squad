@@ -111,7 +111,7 @@
                         @forelse($tests as $test)
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                                 <td class="px-6 py-4">
-                                    <input type="checkbox" name="ids[]" value="{{ $test->id }}" class="bulk-item rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
+                                    <input type="checkbox" name="ids[]" value="{{ $test->id_soal_skill }}" class="bulk-item rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="text-sm font-medium text-slate-900 dark:text-white line-clamp-1" title="{{ $test->pertanyaan }}">{{ Str::limit($test->pertanyaan, 80) }}</span>
@@ -131,11 +131,11 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.skill-tests.edit', $test->id) }}" class="text-slate-400 hover:text-primary transition-colors">
+                                        <a href="{{ route('admin.skill-tests.edit', $test->id_soal_skill) }}" class="text-slate-400 hover:text-primary transition-colors">
                                             <span class="material-symbols-outlined">edit</span>
                                         </a>
                                         {{-- Delete Button (separate form to avoid conflict with bulk form) --}}
-                                        <button type="button" onclick="confirmDelete('{{ route('admin.skill-tests.delete', $test->id) }}')" class="text-slate-400 hover:text-red-600 transition-colors">
+                                        <button type="button" onclick="confirmDelete('{{ route('admin.skill-tests.delete', $test->id_soal_skill) }}')" class="text-slate-400 hover:text-red-600 transition-colors">
                                             <span class="material-symbols-outlined">delete</span>
                                         </button>
                                     </div>

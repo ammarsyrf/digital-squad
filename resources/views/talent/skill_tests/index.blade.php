@@ -44,7 +44,7 @@
 
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-400">Durasi: 30 Menit</span>
-                        <a href="{{ route('talent.skill-tests.take', $category->id) }}"
+                        <a href="{{ route('talent.skill-tests.take', $category->id_kategori_skill) }}"
                             class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-blue-600 transition-colors">
                             Mulai Tes
                         </a>

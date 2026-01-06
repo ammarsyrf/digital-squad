@@ -43,7 +43,7 @@
         <!-- Form -->
         <div
             class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl shadow-sm p-6">
-            <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+            <form action="{{ route('admin.users.update', $user->id_users) }}" method="POST">
                 @csrf
                 @method('PUT')
 

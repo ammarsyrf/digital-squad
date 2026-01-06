@@ -121,7 +121,7 @@ class AdminController extends Controller
 
         foreach ($users as $user) {
             fputcsv($handle, [
-                $user->id,
+                $user->id_users,
                 $user->name,
                 $user->email,
                 $user->role,
@@ -175,7 +175,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id_users . ',id_users',
             'role' => 'required|in:admin,talent,umkm',
         ]);
 
@@ -229,7 +229,7 @@ class AdminController extends Controller
     public function storeSkillTest(Request $request)
     {
         $rules = [
-            'kategori_id' => 'required|exists:kategori_skill,id',
+            'kategori_id' => 'required|exists:kategori_skill,id_kategori_skill',
             'kesulitan' => 'required|in:mudah,sedang,sulit',
             'status' => 'required|in:aktif,nonaktif',
             'questions' => 'required|array|min:1',
@@ -295,7 +295,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'pertanyaan' => 'required|string',
-            'kategori_id' => 'required|exists:kategori_skill,id',
+            'kategori_id' => 'required|exists:kategori_skill,id_kategori_skill',
             'tipe_soal' => 'required|in:pilihan_ganda,essay',
             'opsi_a' => 'required_if:tipe_soal,pilihan_ganda',
             'opsi_b' => 'required_if:tipe_soal,pilihan_ganda',
@@ -335,11 +335,11 @@ class AdminController extends Controller
     {
         $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'exists:soal_skill,id',
+            'ids.*' => 'exists:soal_skill,id_soal_skill',
             'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        SoalSkill::whereIn('id', $request->ids)->update(['status' => $request->status]);
+        SoalSkill::whereIn('id_soal_skill', $request->ids)->update(['status' => $request->status]);
 
         return redirect()->back()->with('success', 'Status soal berhasil diperbarui massal.');
     }
@@ -385,7 +385,7 @@ class AdminController extends Controller
         $category = \App\Models\KategoriSkill::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_kategori' => 'required|string|max:255|unique:kategori_skill,nama_kategori,' . $id,
+            'nama_kategori' => 'required|string|max:255|unique:kategori_skill,nama_kategori,' . $id . ',id_kategori_skill',
         ]);
 
         $category->update($validated);

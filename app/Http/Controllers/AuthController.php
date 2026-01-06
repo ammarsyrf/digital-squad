@@ -64,12 +64,12 @@ class AuthController extends Controller
 
         if ($request->role == 'talent') {
             \App\Models\Talent::create([
-                'user_id' => $user->id,
+                'user_id' => $user->id_users,
                 'nama_lengkap' => $request->nama,
             ]);
         } else {
             \App\Models\Umkm::create([
-                'user_id' => $user->id,
+                'user_id' => $user->id_users,
                 'nama_umkm' => $request->nama,
             ]);
         }

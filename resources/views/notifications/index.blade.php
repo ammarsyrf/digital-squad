@@ -46,7 +46,7 @@
                                 {{ $notif->pesan }}
                             </p>
                             @if($notif->link)
-                                <a href="{{ route('notifications.read', $notif->id) }}"
+                                <a href="{{ route('notifications.read', $notif->id_notifikasi) }}"
                                     class="inline-block mt-2 text-primary text-xs font-bold hover:underline">Lihat Detail &rarr;</a>
                             @endif
                         </div>

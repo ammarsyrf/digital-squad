@@ -42,7 +42,7 @@
         <!-- Form -->
         <div
             class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl shadow-sm p-6">
-            <form action="{{ route('admin.skill-categories.update', $category->id) }}" method="POST">
+            <form action="{{ route('admin.skill-categories.update', $category->id_kategori_skill) }}" method="POST">
                 @csrf
                 @method('PUT')
 

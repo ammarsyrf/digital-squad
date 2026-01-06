@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Admin::create([
-            'user_id' => $adminUser->id,
+            'user_id' => $adminUser->id_users,
             'nama_admin' => 'Administrator',
         ]);
 
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Umkm::create([
-            'user_id' => $umkmUser->id,
+            'user_id' => $umkmUser->id_users,
             'nama_perusahaan' => 'PT UMKM Maju',
             'nama_umkm' => 'UMKM Maju',
             'deskripsi' => 'UMKM yang bergerak di bidang teknologi',
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Talent::create([
-            'user_id' => $talentUser->id,
+            'user_id' => $talentUser->id_users,
             'nama_lengkap' => 'Talent Profesional',
             'deskripsi' => 'Seorang talent berbakat',
             'jenis_kelamin' => 'Laki-laki',

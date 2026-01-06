@@ -55,11 +55,11 @@
                         </span>
                     </div>
                     <div class="flex gap-2 relative z-10">
-                        <a href="{{ route('umkm.jobs.edit', $job->id) }}" onclick="event.stopPropagation()"
+                        <a href="{{ route('umkm.jobs.edit', $job->id_lowongan) }}" onclick="event.stopPropagation()"
                             class="flex-1 text-center py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold hover:bg-slate-200 transition-colors">
                             Edit
                         </a>
-                        <form action="{{ route('umkm.jobs.destroy', $job->id) }}" method="POST" class="flex-1"
+                        <form action="{{ route('umkm.jobs.destroy', $job->id_lowongan) }}" method="POST" class="flex-1"
                             onsubmit="return confirm('Hapus lowongan ini?')">
                             @csrf
                             @method('DELETE')

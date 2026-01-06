@@ -38,7 +38,7 @@
                             $displayRole = 'Instansi';
                         }
                     @endphp
-                    <a href="{{ route('messages.show', $contact->id) }}"
+                    <a href="{{ route('messages.show', $contact->id_users) }}"
                         class="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-50 dark:border-slate-800/50">
                         <div
                             class="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20 overflow-hidden">
@@ -85,7 +85,7 @@
                 <p class="text-slate-500 mb-6">Pilih salah satu kontak di samping untuk mulai berkirim pesan dengan instansi atau
                     talenta.</p>
                 @if(Auth::user()->role !== 'admin')
-                    <a href="{{ route('messages.show', \App\Models\User::where('role', 'admin')->first()->id ?? 1) }}"
+                    <a href="{{ route('messages.show', \App\Models\User::where('role', 'admin')->first()->id_users ?? 1) }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-primary/20">
                         <span class="material-symbols-outlined">contact_support</span>
                         Hubungi Admin

@@ -53,7 +53,7 @@
     </div>
     <div class="p-4 border-t border-slate-200 dark:border-slate-800 mt-auto space-y-2">
         <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
-            href="{{ route('messages.show', \App\Models\User::where('role', 'admin')->first()->id ?? 1) }}">
+            href="{{ route('messages.show', \App\Models\User::where('role', 'admin')->first()->id_users ?? 1) }}">
             <span class="material-symbols-outlined group-hover:text-primary transition-colors">contact_support</span>
             <p class="text-sm font-medium leading-normal">Bantuan Ke Admin</p>
         </a>
