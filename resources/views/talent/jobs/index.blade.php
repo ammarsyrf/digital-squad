@@ -45,7 +45,7 @@
                         <div class="flex items-start justify-between mb-4">
                             <div class="flex items-center gap-4">
                                 <div class="size-14 rounded-2xl bg-white dark:bg-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-600">
-                                    @if($job->umkm->logo)
+                                    @if($job->umkm?->logo)
                                         <img src="{{ asset('storage/' . $job->umkm->logo) }}" alt="Logo" class="w-full h-full object-cover">
                                     @else
                                         <span class="material-symbols-outlined text-slate-400 text-2xl">business</span>
@@ -54,7 +54,7 @@
                                 <div>
                                     <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-1">
                                         {{ $job->judul }}</h3>
-                                    <p class="text-sm font-medium text-slate-500 line-clamp-1">{{ $job->umkm->nama_umkm }}</p>
+                                    <p class="text-sm font-medium text-slate-500 line-clamp-1">{{ $job->umkm?->nama_umkm ?? 'Instansi' }}</p>
                                 </div>
                             </div>
                         </div>

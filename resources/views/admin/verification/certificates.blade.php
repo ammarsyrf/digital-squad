@@ -83,8 +83,8 @@
                                     </div>
                                     <div>
                                         <span
-                                            class="font-bold text-slate-900 dark:text-white block">{{ $sertifikat->user->talent->nama_lengkap ?? $sertifikat->user->name }}</span>
-                                        <span class="text-xs text-slate-500">{{ $sertifikat->user->email }}</span>
+                                            class="font-bold text-slate-900 dark:text-white block">{{ $sertifikat->user?->talent?->nama_lengkap ?? ($sertifikat->user?->name ?? 'User') }}</span>
+                                        <span class="text-xs text-slate-500">{{ $sertifikat->user?->email }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -150,7 +150,7 @@
                                             method="POST">
                                             @csrf
                                             <button type="submit"
-                                                data-name="{{ $sertifikat->user->talent->nama_lengkap ?? $sertifikat->user->name }}"
+                                                data-name="{{ $sertifikat->user?->talent?->nama_lengkap ?? ($sertifikat->user?->name ?? 'User') }}"
                                                 onclick="confirmVerification(event, this.getAttribute('data-name'))"
                                                 class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                                                 title="Setujui">

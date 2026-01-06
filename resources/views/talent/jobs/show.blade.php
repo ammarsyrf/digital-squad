@@ -24,7 +24,7 @@
                     <div class="flex flex-col md:flex-row items-end gap-6">
                         <div
                             class="size-32 rounded-3xl bg-white dark:bg-slate-700 p-2 shadow-2xl border border-slate-100 dark:border-slate-800 transform hover:scale-105 transition-transform duration-300 -mt-16">
-                            @if($lowongan->umkm->logo)
+                            @if($lowongan->umkm?->logo)
                                 <img src="{{ asset('storage/' . $lowongan->umkm->logo) }}" alt="Logo"
                                     class="w-full h-full object-cover rounded-2xl">
                             @else
@@ -37,8 +37,8 @@
                         <div class="pb-2">
                             <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-1">{{ $lowongan->judul }}</h1>
                             <div class="flex items-center gap-2">
-                                <p class="text-primary font-bold text-lg">{{ $lowongan->umkm->nama_umkm }}</p>
-                                @if($lowongan->umkm->status_verifikasi == 'Terverifikasi')
+                                <p class="text-primary font-bold text-lg">{{ $lowongan->umkm?->nama_umkm ?? 'Instansi' }}</p>
+                                @if($lowongan->umkm?->status_verifikasi == 'Terverifikasi')
                                     <span class="px-2 py-0.5 bg-emerald-500 text-white text-[9px] font-black rounded-full flex items-center gap-1 uppercase tracking-tighter">
                                         <span class="material-symbols-outlined text-[12px]">verified</span> Verified
                                     </span>
@@ -54,20 +54,24 @@
                                 <span class="material-symbols-outlined filled">check_circle</span>
                                 Sudah Dilamar
                             </div>
-                            <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
-                                class="px-8 py-4 bg-primary/5 text-primary border-2 border-primary/20 rounded-2xl font-black hover:bg-primary/10 transition-all flex items-center gap-2 active:scale-95">
-                                <span class="material-symbols-outlined">chat</span>
-                                Tanya Instansi
-                            </a>
+                            @if($lowongan->umkm?->user_id)
+                                <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
+                                    class="px-8 py-4 bg-primary/5 text-primary border-2 border-primary/20 rounded-2xl font-black hover:bg-primary/10 transition-all flex items-center gap-2 active:scale-95">
+                                    <span class="material-symbols-outlined">chat</span>
+                                    Tanya Instansi
+                                </a>
+                            @endif
                         </div>
                     @else
                         <div x-data="{ showApplyModal: {{ $errors->any() ? 'true' : 'false' }}, fileName: null }">
                             <div class="flex flex-col md:flex-row gap-3">
-                                <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
-                                    class="px-8 py-4 border-2 border-primary text-primary rounded-2xl font-black hover:bg-primary/5 transition-all flex items-center gap-2 active:scale-95">
-                                    <span class="material-symbols-outlined">chat</span>
-                                    Tanya Instansi
-                                </a>
+                                @if($lowongan->umkm?->user_id)
+                                    <a href="{{ route('messages.show', $lowongan->umkm->user_id) }}"
+                                        class="px-8 py-4 border-2 border-primary text-primary rounded-2xl font-black hover:bg-primary/5 transition-all flex items-center gap-2 active:scale-95">
+                                        <span class="material-symbols-outlined">chat</span>
+                                        Tanya Instansi
+                                    </a>
+                                @endif
                                 <button @click="showApplyModal = true"
                                     class="px-10 py-4 bg-primary text-white rounded-2xl font-black hover:bg-blue-600 transition-all shadow-xl shadow-primary/30 flex items-center gap-2 active:scale-95">
                                     <span class="material-symbols-outlined">send</span>
@@ -284,12 +288,14 @@
                     <div class="pt-10 border-t border-slate-200 dark:border-slate-700 space-y-6">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Tentang Instansi</h4>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-4">
-                            {{ $lowongan->umkm->deskripsi ?? 'Instansi ini belum mencantumkan deskripsi profil mereka secara mendalam.' }}</p>
+                            {{ $lowongan->umkm?->deskripsi ?? 'Instansi ini belum mencantumkan deskripsi profil mereka secara mendalam.' }}</p>
+                        @if($lowongan->umkm?->id_umkm)
                         <a href="{{ route('talent.umkm.show', $lowongan->umkm->id_umkm) }}" 
                             class="group flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10 hover:bg-primary/10 transition-all active:scale-95">
                             <span class="text-sm font-black text-primary">Lihat Profil Instansi</span>
                             <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>

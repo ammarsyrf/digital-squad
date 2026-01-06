@@ -68,7 +68,7 @@
                                     <div>
                                         <span
                                             class="font-bold text-slate-900 dark:text-white block">{{ $umkm->nama_umkm }}</span>
-                                        <span class="text-xs text-slate-500">{{ $umkm->user->email }}</span>
+                                        <span class="text-xs text-slate-500">{{ $umkm->user?->email }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -178,7 +178,7 @@
                                                                 @endif
                                                             </div>
                                                             <h4 class="text-xl font-bold text-slate-900 dark:text-white">{{ $umkm->nama_umkm }}</h4>
-                                                            <p class="text-slate-500 text-sm">{{ $umkm->user->email }}</p>
+                                                            <p class="text-slate-500 text-sm">{{ $umkm->user?->email }}</p>
                                                         </div>
 
                                                         <div class="space-y-4 divide-y divide-slate-100 dark:divide-slate-800">
@@ -187,7 +187,7 @@
                                                                 <div class="space-y-2">
                                                                      <div class="flex justify-between text-sm">
                                                                         <span class="text-slate-500">Pemilik</span>
-                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->user->name ?? '-' }}</span>
+                                                                        <span class="font-medium text-slate-900 dark:text-white">{{ $umkm->user?->name ?? '-' }}</span>
                                                                     </div>
                                                                      <div class="flex justify-between text-sm">
                                                                         <span class="text-slate-500">Kategori</span>

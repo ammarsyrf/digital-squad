@@ -14,6 +14,6 @@ class KategoriSkill extends Model
 
     public function soal()
     {
-        return $this->hasMany(SoalSkill::class, 'kategori_id');
+        return $this->hasMany(SoalSkill::class, 'kategori_id', 'id_kategori_skill');
     }
 }

@@ -155,7 +155,7 @@
                 </div>
                 <div class="bg-slate-50 dark:bg-slate-800/50 p-6 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 sticky bottom-0">
                     <button onclick="closeJobModal()" class="px-5 py-2.5 font-bold text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700 rounded-xl transition-colors">Tutup</button>
-                    <a href="/umkm/jobs/${job.id}/edit" class="px-6 py-2.5 font-bold bg-primary text-white rounded-xl hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2">
+                    <a href="/umkm/jobs/${job.id_lowongan}/edit" class="px-6 py-2.5 font-bold bg-primary text-white rounded-xl hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
                         Edit Lowongan
                     </a>

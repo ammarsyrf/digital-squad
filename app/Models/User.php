@@ -48,26 +48,26 @@ class User extends Authenticatable
 
     public function talent()
     {
-        return $this->hasOne(Talent::class, 'user_id');
+        return $this->hasOne(Talent::class, 'user_id', 'id_users');
     }
 
     public function umkm()
     {
-        return $this->hasOne(Umkm::class, 'user_id');
+        return $this->hasOne(Umkm::class, 'user_id', 'id_users');
     }
 
     public function admin()
     {
-        return $this->hasOne(Admin::class, 'user_id');
+        return $this->hasOne(Admin::class, 'user_id', 'id_users');
     }
 
     public function hasilTes()
     {
-        return $this->hasMany(HasilTes::class, 'user_id');
+        return $this->hasMany(HasilTes::class, 'user_id', 'id_users');
     }
 
     public function sertifikats()
     {
-        return $this->hasMany(Sertifikat::class, 'user_id');
+        return $this->hasMany(Sertifikat::class, 'user_id', 'id_users');
     }
 }

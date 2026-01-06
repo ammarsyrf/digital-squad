@@ -34,8 +34,8 @@
                 <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
                     <div class="w-24 h-24 bg-white rounded-full p-1 shadow-lg">
                         <div class="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                             @if($sertifikat->user->talent && $sertifikat->user->talent->foto)
-                                <img src="{{ asset('storage/'.$sertifikat->user->talent->foto) }}" class="w-full h-full object-cover">
+                             @if($sertifikat->user?->talent && $sertifikat->user?->talent?->foto)
+                                <img src="{{ asset('storage/'.$sertifikat->user?->talent?->foto) }}" class="w-full h-full object-cover">
                              @else
                                 <span class="material-symbols-outlined text-4xl text-gray-400">person</span>
                              @endif
@@ -63,7 +63,7 @@
                 <div class="space-y-4 text-left bg-gray-50 rounded-xl p-5 mb-6">
                     <div>
                         <p class="text-xs uppercase text-gray-400 font-bold tracking-wider mb-1">Pemilik Sertifikat</p>
-                        <p class="font-medium text-gray-900">{{ $sertifikat->user->talent->nama_lengkap ?? $sertifikat->user->name }}</p>
+                        <p class="font-medium text-gray-900">{{ $sertifikat->user?->talent?->nama_lengkap ?? ($sertifikat->user?->name ?? 'User') }}</p>
                     </div>
                     <div>
                         <p class="text-xs uppercase text-gray-400 font-bold tracking-wider mb-1">Tanggal Terbit</p>

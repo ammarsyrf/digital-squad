@@ -25,6 +25,6 @@ class SoalSkill extends Model
 
     public function kategori()
     {
-        return $this->belongsTo(KategoriSkill::class, 'kategori_id');
+        return $this->belongsTo(KategoriSkill::class, 'kategori_id', 'id_kategori_skill');
     }
 }

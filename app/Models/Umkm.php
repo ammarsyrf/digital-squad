@@ -26,11 +26,11 @@ class Umkm extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id_users');
     }
 
     public function lowongan()
     {
-        return $this->hasMany(Lowongan::class);
+        return $this->hasMany(Lowongan::class, 'umkm_id', 'id_umkm');
     }
 }

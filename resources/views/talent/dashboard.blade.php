@@ -194,10 +194,10 @@
                                                                 <div class="flex items-center gap-3">
                                                                     <div
                                                                         class="size-8 rounded bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
-                                                                        {{ substr($lamaran->lowongan->umkm->nama_umkm, 0, 1) }}
+                                                                        {{ substr($lamaran->lowongan?->umkm?->nama_umkm ?? 'U', 0, 1) }}
                                                                     </div>
                                                                     <span
-                                                                        class="font-bold text-slate-700 dark:text-slate-200 line-clamp-1">{{ $lamaran->lowongan->umkm->nama_umkm }}</span>
+                                                                        class="font-bold text-slate-700 dark:text-slate-200 line-clamp-1">{{ $lamaran->lowongan?->umkm?->nama_umkm ?? 'Instansi' }}</span>
                                                                 </div>
                                                             </td>
                                                             <td class="px-6 py-4 text-slate-600 dark:text-slate-400 font-medium">

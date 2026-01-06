@@ -28,6 +28,6 @@ class Lowongan extends Model
 
     public function lamaran()
     {
-        return $this->hasMany(Lamaran::class);
+        return $this->hasMany(Lamaran::class, 'lowongan_id', 'id_lowongan');
     }
 }

@@ -19,11 +19,11 @@ class Lamaran extends Model
 
     public function talent()
     {
-        return $this->belongsTo(Talent::class);
+        return $this->belongsTo(Talent::class, 'talent_id', 'id_talent');
     }
 
     public function lowongan()
     {
-        return $this->belongsTo(Lowongan::class);
+        return $this->belongsTo(Lowongan::class, 'lowongan_id', 'id_lowongan');
     }
 }

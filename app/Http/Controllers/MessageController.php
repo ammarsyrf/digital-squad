@@ -88,7 +88,7 @@ class MessageController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'receiver_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:users,id_users',
             'pesan' => 'required|string',
         ]);
 

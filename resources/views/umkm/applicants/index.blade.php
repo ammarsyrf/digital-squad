@@ -192,7 +192,7 @@
                                                     <div class="flex flex-wrap gap-4 mt-3 text-sm text-slate-600 dark:text-slate-400">
                                                         <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
                                                             <span class="material-symbols-outlined text-lg text-primary">email</span>
-                                                            {{ $app->talent->user->email }}
+                                                            {{ $app->talent->user?->email }}
                                                         </div>
                                                         <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-3 py-1 rounded-lg">
                                                             <span class="material-symbols-outlined text-lg text-primary">call</span>
@@ -315,7 +315,7 @@
                                             <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
                                             <!-- Certificates -->
-                                            @if($app->talent->user->sertifikats->count() > 0)
+                                            @if($app->talent->user && $app->talent->user->sertifikats->count() > 0)
                                             <div>
                                                 <h5 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                                                     <span class="material-symbols-outlined text-primary text-lg">workspace_premium</span>

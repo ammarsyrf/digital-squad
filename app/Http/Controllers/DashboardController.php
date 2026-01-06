@@ -67,7 +67,7 @@ class DashboardController extends Controller
         $newCerts = Sertifikat::with('user')->latest()->take(5)->get()->map(function($item){
             return [
                 'type' => 'certificate',
-                'message' => ($item->user->name ?? 'User') . ' mengunggah sertifikat ' . $item->nama_sertifikat,
+                'message' => ($item->user?->name ?? 'User') . ' mengunggah sertifikat ' . $item->nama_sertifikat,
                 'time' => $item->created_at,
                 'icon' => 'card_membership',
                 'color' => 'blue'

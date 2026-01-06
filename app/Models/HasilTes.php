@@ -18,11 +18,11 @@ class HasilTes extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id_users');
     }
 
     public function kategori()
     {
-        return $this->belongsTo(KategoriSkill::class, 'kategori_id');
+        return $this->belongsTo(KategoriSkill::class, 'kategori_id', 'id_kategori_skill');
     }
 }

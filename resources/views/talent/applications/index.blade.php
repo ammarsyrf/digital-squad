@@ -37,7 +37,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span
-                                    class="text-sm text-slate-600 dark:text-slate-400">{{ $app->lowongan->umkm->nama_umkm }}</span>
+                                    class="text-sm text-slate-600 dark:text-slate-400">{{ $app->lowongan?->umkm?->nama_umkm ?? 'Instansi' }}</span>
                             </td>
                             <td class="px-6 py-4 text-sm text-slate-500">
                                 {{ $app->created_at->format('d M Y') }}

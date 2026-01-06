@@ -35,7 +35,7 @@
                             $displayName = $contact->talent->nama_lengkap ?? $contact->name;
                         } elseif ($contact->role == 'umkm' && $contact->umkm) {
                             $photoUrl = $contact->umkm->logo ? asset('storage/' . $contact->umkm->logo) : null;
-                            $displayName = $contact->umkm->nama_umkm ?? $contact->name;
+                            $displayName = $contact->umkm?->nama_umkm ?? $contact->name;
                             $displayRole = 'Instansi';
                         }
                     @endphp
@@ -82,7 +82,7 @@
                             $headerName = $user->talent->nama_lengkap ?? $user->name;
                         } elseif ($user->role == 'umkm' && $user->umkm) {
                             $headerPhoto = $user->umkm->logo ? asset('storage/' . $user->umkm->logo) : null;
-                            $headerName = $user->umkm->nama_umkm ?? $user->name;
+                            $headerName = $user->umkm?->nama_umkm ?? $user->name;
                             $headerRole = 'Instansi';
                         }
                     @endphp

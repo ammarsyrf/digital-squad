@@ -32,11 +32,11 @@ class Talent extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id_users');
     }
 
     public function lamaran()
     {
-        return $this->hasMany(Lamaran::class, 'talent_id');
+        return $this->hasMany(Lamaran::class, 'talent_id', 'id_talent');
     }
 }
