@@ -94,65 +94,138 @@
                     </div>
                 </div>
 
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                            <th class="px-6 py-4 w-4">
-                                <input type="checkbox" id="select-all" class="rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
-                            </th>
-                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Pertanyaan</th>
-                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Kategori</th>
-                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tipe</th>
-                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Status</th>
-                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                        @forelse($tests as $test)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                <td class="px-6 py-4">
-                                    <input type="checkbox" name="ids[]" value="{{ $test->id_soal_skill }}" class="bulk-item rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-sm font-medium text-slate-900 dark:text-white line-clamp-1" title="{{ $test->pertanyaan }}">{{ Str::limit($test->pertanyaan, 80) }}</span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-                                    {{ $test->kategori->nama_kategori }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-                                    {{ ucwords(str_replace('_', ' ', $test->tipe_soal)) }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
-                                    @if($test->status == 'aktif')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Aktif</span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">Non-Aktif</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.skill-tests.edit', $test->id_soal_skill) }}" class="text-slate-400 hover:text-primary transition-colors">
-                                            <span class="material-symbols-outlined">edit</span>
-                                        </a>
-                                        {{-- Delete Button (separate form to avoid conflict with bulk form) --}}
-                                        <button type="button" onclick="confirmDelete('{{ route('admin.skill-tests.delete', $test->id_soal_skill) }}')" class="text-slate-400 hover:text-red-600 transition-colors">
-                                            <span class="material-symbols-outlined">delete</span>
-                                        </button>
-                                    </div>
-                                </td>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Kategori & Soal</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 text-right">Jumlah Soal</th>
                             </tr>
+                        </thead>
+                        @forelse($categories as $category)
+                            <tbody x-data="{ expanded: false }" class="border-b border-slate-100 dark:border-slate-800">
+                                <!-- Category Row -->
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group" @click="expanded = !expanded">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 group-hover:text-primary transition-colors">
+                                                <span class="material-symbols-outlined transition-transform duration-300" :class="expanded ? 'rotate-180' : ''">expand_more</span>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-slate-900 dark:text-white text-base">{{ $category->nama_kategori }}</h4>
+                                                <p class="text-xs text-primary font-bold mt-1" x-show="expanded" x-transition>Menampilkan daftar soal</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                                            {{ $category->soal_count }} Soal
+                                        </span>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Internal Questions Row -->
+                                <tr x-show="expanded" x-collapse style="display: none;">
+                                    <td colspan="2" class="p-0 bg-slate-50/50 dark:bg-slate-800/20 shadow-inner">
+                                        <div class="px-4 py-4 sm:px-14">
+                                            <table class="w-full text-left">
+                                                <thead>
+                                                    <tr class="border-b border-slate-200 dark:border-slate-700">
+                                                        <th class="px-4 py-3 w-4">
+                                                            <input type="checkbox" @change="$el.closest('tbody').querySelectorAll('.bulk-item').forEach(c => c.checked = $el.checked)" class="rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
+                                                        </th>
+                                                        <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Pertanyaan</th>
+                                                        <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Tipe</th>
+                                                        <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Kesulitan</th>
+                                                        <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
+                                                        <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 text-right">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                                                    @forelse($category->soal as $soal)
+                                                        <tr class="hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                                            <td class="px-4 py-3">
+                                                                <input type="checkbox" name="ids[]" value="{{ $soal->id_soal_skill }}" class="bulk-item rounded border-slate-300 text-primary focus:ring-primary w-4 h-4">
+                                                            </td>
+                                                            <td class="px-4 py-3">
+                                                                <p class="text-sm font-medium text-slate-900 dark:text-white line-clamp-2" title="{{ $soal->pertanyaan }}">{{ $soal->pertanyaan }}</p>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-xs text-slate-500">
+                                                                {{ ucwords(str_replace('_', ' ', $soal->tipe_soal)) }}
+                                                            </td>
+                                                            <td class="px-4 py-3">
+                                                                @php
+                                                                    $badgeClass = match($soal->kesulitan) {
+                                                                        'mudah' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                                                        'sedang' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                                                        'sulit' => 'bg-rose-100 text-rose-700 border-rose-200',
+                                                                        default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                                                    };
+                                                                @endphp
+                                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border {{ $badgeClass }}">
+                                                                    {{ $soal->kesulitan }}
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-4 py-3">
+                                                                @if($soal->status == 'aktif')
+                                                                    <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
+                                                                        <div class="size-1.5 rounded-full bg-emerald-500"></div>
+                                                                        Aktif
+                                                                    </div>
+                                                                @else
+                                                                    <div class="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+                                                                        <div class="size-1.5 rounded-full bg-slate-400"></div>
+                                                                        Non-Aktif
+                                                                    </div>
+                                                                @endif
+                                                            </td>
+                                                            <td class="px-4 py-3 text-right">
+                                                                <div class="flex items-center justify-end gap-2">
+                                                                    <a href="{{ route('admin.skill-tests.edit', $soal->id_soal_skill) }}" class="p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-primary transition-colors">
+                                                                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                                                                    </a>
+                                                                    <button type="button" onclick="confirmDelete('{{ route('admin.skill-tests.delete', $soal->id_soal_skill) }}')" class="p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-red-600 transition-colors">
+                                                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6" class="px-4 py-6 text-center text-slate-500 italic">
+                                                                <div class="flex flex-col items-center">
+                                                                    <span class="material-symbols-outlined text-silver-300 text-3xl mb-1">sentiment_dissatisfied</span>
+                                                                    <span class="text-xs">Belum ada soal di kategori ini.</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         @empty
-                            <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                                    Belum ada soal yang tersedia.
-                                </td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-full mb-3">
+                                                <span class="material-symbols-outlined text-4xl text-slate-400">search_off</span>
+                                            </div>
+                                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Tidak Ada Data</h3>
+                                            <p class="text-sm">Belum ada kategori soal yang ditemukan.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         @endforelse
-                    </tbody>
-                </table>
+                    </table>
+                </div>
             </form>
             <div class="p-4 border-t border-slate-100 dark:border-slate-800">
-                {{ $tests->links() }}
+                {{ $categories->links() }}
             </div>
         </div>
 
@@ -163,13 +236,7 @@
         </form>
 
         <script>
-            // Select All Logic
-            document.getElementById('select-all').addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.bulk-item');
-                checkboxes.forEach(cb => cb.checked = this.checked);
-            });
-
-            // Delete Confirmation Logic for individual items inside bulk form (to prevent nested forms)
+            // Delete Confirmation Logic
             function confirmDelete(url) {
                 if (confirm('Hapus soal ini?')) {
                     const form = document.getElementById('delete-form');

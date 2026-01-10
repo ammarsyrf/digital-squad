@@ -199,25 +199,26 @@ class AdminController extends Controller
 
     public function skillTests(Request $request)
     {
-        $query = SoalSkill::with('kategori');
+        $query = \App\Models\KategoriSkill::with(['soal' => function($q) {
+            $q->orderByRaw("CASE WHEN kesulitan = 'mudah' THEN 1 WHEN kesulitan = 'sedang' THEN 2 WHEN kesulitan = 'sulit' THEN 3 ELSE 4 END");
+        }]);
 
         if ($request->filled('q')) {
             $q = $request->q;
-            $query->where('pertanyaan', 'like', "%$q%")
-                ->orWhere('soal', 'like', "%$q%") // Backwards compatibility if 'soal' column exists
-                ->orWhereHas('kategori', function ($sq) use ($q) {
-                    $sq->where('nama_kategori', 'like', "%$q%");
-                });
+            $query->where('nama_kategori', 'like', "%$q%")
+                  ->orWhereHas('soal', function($sq) use ($q) {
+                      $sq->where('pertanyaan', 'like', "%$q%");
+                  });
         }
 
-        $tests = $query->latest()->paginate(10);
+        $categories = $query->withCount('soal')->latest('id_kategori_skill')->paginate(10);
 
         // Statistics
         $totalSoal = \App\Models\SoalSkill::count();
         $totalKategori = \App\Models\KategoriSkill::count();
         $activeSoal = \App\Models\SoalSkill::where('status', 'aktif')->count();
 
-        return view('admin.skill_tests.index', compact('tests', 'totalSoal', 'totalKategori', 'activeSoal'));
+        return view('admin.skill_tests.index', compact('categories', 'totalSoal', 'totalKategori', 'activeSoal'));
     }
 
     public function createSkillTest()

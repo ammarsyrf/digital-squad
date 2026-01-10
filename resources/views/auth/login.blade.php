@@ -47,7 +47,7 @@
                  <div class="relative z-10 space-y-6">
                     <h1 class="text-5xl font-black leading-tight tracking-tight">
                         Platform Karir <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400">Masa Depan.</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">Masa Depan.</span>
                     </h1>
                     <p class="text-blue-100 text-lg max-w-md leading-relaxed">
                         Bergabunglah dengan ribuan profesional yang telah menemukan peluang emas mereka bersama kami.
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Right: Login Form (5 cols) -->
-            <div class="col-span-12 lg:col-span-5 p-8 sm:p-12 xl:p-16 flex flex-col justify-center bg-white dark:bg-slate-900 relative">
+            <div class="col-span-12 lg:col-span-5 p-8 sm:p-12 xl:p-16 flex flex-col justify-center bg-gradient-to-br from-blue-50 to-white dark:bg-slate-900 relative">
                 <!-- Mobile Only Header -->
                 <div class="lg:hidden mb-8 text-center">
                     <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-500/30">

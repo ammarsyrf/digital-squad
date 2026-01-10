@@ -314,6 +314,36 @@
 
                                             <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
+                                            <!-- Test Skill Results -->
+                                            @if($app->talent->user && $app->talent->user->hasilTes->count() > 0)
+                                            <div>
+                                                <h5 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-primary text-lg">quiz</span>
+                                                    Hasil Tes Skill
+                                                </h5>
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                    @foreach($app->talent->user->hasilTes as $hasil)
+                                                        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex items-center justify-between hover:shadow-md transition-shadow">
+                                                            <div>
+                                                                <h6 class="font-bold text-slate-900 dark:text-white text-sm mb-1">
+                                                                    {{ $hasil->kategori ? $hasil->kategori->nama_kategori : 'Unknown Skill' }}
+                                                                </h6>
+                                                                <p class="text-xs text-slate-500">
+                                                                    {{ $hasil->created_at->format('d M Y') }}
+                                                                </p>
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <div class="text-xl font-black text-primary">{{ $hasil->skor }}</div>
+                                                                <div class="text-[10px] uppercase font-bold text-slate-400">Nilai</div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+                                            @endif
+
                                             <!-- Certificates -->
                                             @if($app->talent->user && $app->talent->user->sertifikats->count() > 0)
                                             <div>
